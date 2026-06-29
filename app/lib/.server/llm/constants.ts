@@ -25,7 +25,7 @@ export const PROVIDER_COMPLETION_LIMITS: Record<string, number> = {
   Together: 8192,
   xAI: 8192,
   LMStudio: 8192,
-  OpenAILike: 8192,
+  OpenAILike: 128000,
   AmazonBedrock: 8192,
   Hyperbolic: 8192,
 };
