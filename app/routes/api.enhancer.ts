@@ -4,8 +4,19 @@ import { stripIndents } from '~/utils/stripIndent';
 import type { ProviderInfo } from '~/types/model';
 import { getApiKeysFromCookie, getProviderSettingsFromCookie } from '~/lib/api/cookies';
 import { createScopedLogger } from '~/utils/logger';
+import { checkRateLimit, rateLimitResponse } from '~/lib/.server/rate-limiter';
 
 export async function action(args: ActionFunctionArgs) {
+  const kv = (args.context as any)?.cloudflare?.env?.RATE_LIMIT_KV as KVNamespace | undefined;
+
+  if (kv) {
+    const rateCheck = await checkRateLimit(kv);
+
+    if (!rateCheck.allowed) {
+      return rateLimitResponse(rateCheck.retryAfterMs);
+    }
+  }
+
   return enhancerAction(args);
 }
 

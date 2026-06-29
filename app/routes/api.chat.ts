@@ -14,8 +14,19 @@ import { extractPropertiesFromMessage } from '~/lib/.server/llm/utils';
 import type { DesignScheme } from '~/types/design-scheme';
 import { MCPService } from '~/lib/services/mcpService';
 import { StreamRecoveryManager } from '~/lib/.server/llm/stream-recovery';
+import { checkRateLimit, rateLimitResponse } from '~/lib/.server/rate-limiter';
 
 export async function action(args: ActionFunctionArgs) {
+  const kv = (args.context as any)?.cloudflare?.env?.RATE_LIMIT_KV as KVNamespace | undefined;
+
+  if (kv) {
+    const rateCheck = await checkRateLimit(kv);
+
+    if (!rateCheck.allowed) {
+      return rateLimitResponse(rateCheck.retryAfterMs);
+    }
+  }
+
   return chatAction(args);
 }
 

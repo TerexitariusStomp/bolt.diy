@@ -5,5 +5,10 @@ compatibility_date = "2025-03-28"
 pages_build_output_dir = "./build/client"
 send_metrics = false
 
+# KV namespace for rate limiting across worker instances
+[[kv_namespaces]]
+binding = "RATE_LIMIT_KV"
+id = "08f05233bc6a4c8c82d8f2ac7c071303"
+
 # Custom domain (ai.templeearth.cc) is configured via:
 # npx wrangler pages deployment --project-name ai-app-builder
