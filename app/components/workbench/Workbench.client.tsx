@@ -314,16 +314,10 @@ export const Workbench = memo(
     };
 
     useEffect(() => {
-      if (hasPreview && !streaming) {
+      if (hasPreview) {
         setSelectedView('preview');
       }
-    }, [hasPreview, streaming]);
-
-    useEffect(() => {
-      if (!streaming && hasPreview && !showWorkbench) {
-        workbenchStore.showWorkbench.set(true);
-      }
-    }, [streaming, hasPreview, showWorkbench]);
+    }, [hasPreview]);
 
     useEffect(() => {
       workbenchStore.setDocuments(files);
