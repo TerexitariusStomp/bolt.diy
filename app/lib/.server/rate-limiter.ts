@@ -1,7 +1,6 @@
 const MAX_REQUESTS = 30;
 const WINDOW_MS = 60_000;
 const KV_KEY = 'rate-limit-bucket';
-const MAX_WAIT_MS = 90_000;
 
 interface RateLimitState {
   count: number;
@@ -13,7 +12,7 @@ function sleep(ms: number): Promise<void> {
 }
 
 export async function waitForRateLimit(kv: KVNamespace): Promise<void> {
-  for (let attempt = 0; attempt < 5; attempt++) {
+  while (true) {
     const now = Date.now();
 
     let state: RateLimitState;
@@ -41,12 +40,7 @@ export async function waitForRateLimit(kv: KVNamespace): Promise<void> {
       return;
     }
 
-    const waitMs = Math.min(WINDOW_MS - (now - state.windowStart), MAX_WAIT_MS);
-
-    if (attempt >= 4) {
-      return;
-    }
-
-    await sleep(waitMs);
+    const waitMs = WINDOW_MS - (now - state.windowStart);
+    await sleep(Math.max(waitMs, 1000));
   }
 }
