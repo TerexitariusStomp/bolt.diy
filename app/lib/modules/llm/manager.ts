@@ -201,6 +201,12 @@ export class LLMManager {
   }
 
   getDefaultProvider(): BaseProvider {
+    const googleProvider = this._providers.get('Google');
+
+    if (googleProvider) {
+      return googleProvider;
+    }
+
     const firstProvider = this._providers.values().next().value;
 
     if (!firstProvider) {
