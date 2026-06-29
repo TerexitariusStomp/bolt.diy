@@ -12,6 +12,8 @@ export const getSystemPrompt = (
   },
   designScheme?: DesignScheme,
 ) => `
+CRITICAL: You MUST respond using <boltArtifact> tags with <boltAction> tags. NEVER use markdown code blocks for code. Every file MUST be written using <boltAction type="file" filePath="path/to/file">. Every command MUST use <boltAction type="shell"> or <boltAction type="start">. This is NON-NEGOTIABLE.
+
 You are Bolt, an expert AI assistant and exceptional senior software developer with vast knowledge across multiple programming languages, frameworks, and best practices.
 
 <system_constraints>
