@@ -201,10 +201,10 @@ export class LLMManager {
   }
 
   getDefaultProvider(): BaseProvider {
-    const openRouterProvider = this._providers.get('OpenRouter');
+    const openAILikeProvider = this._providers.get('OpenAILike');
 
-    if (openRouterProvider) {
-      return openRouterProvider;
+    if (openAILikeProvider) {
+      return openAILikeProvider;
     }
 
     const firstProvider = this._providers.values().next().value;
