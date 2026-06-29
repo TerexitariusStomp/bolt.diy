@@ -1,58 +1,52 @@
 const MAX_REQUESTS = 30;
 const WINDOW_MS = 60_000;
 const KV_KEY = 'rate-limit-bucket';
+const MAX_WAIT_MS = 90_000;
 
 interface RateLimitState {
   count: number;
   windowStart: number;
 }
 
-export async function checkRateLimit(kv: KVNamespace): Promise<{ allowed: boolean; retryAfterMs: number }> {
-  const now = Date.now();
-
-  let state: RateLimitState;
-
-  try {
-    const raw = await kv.get(KV_KEY);
-    state = raw ? JSON.parse(raw) : { count: 0, windowStart: now };
-  } catch {
-    state = { count: 0, windowStart: now };
-  }
-
-  if (now - state.windowStart >= WINDOW_MS) {
-    state = { count: 0, windowStart: now };
-  }
-
-  if (state.count >= MAX_REQUESTS) {
-    const retryAfterMs = WINDOW_MS - (now - state.windowStart);
-    return { allowed: false, retryAfterMs: Math.max(retryAfterMs, 1000) };
-  }
-
-  state.count += 1;
-
-  try {
-    await kv.put(KV_KEY, JSON.stringify(state), { expirationTtl: 120 });
-  } catch {
-    // KV write failed — allow the request through rather than blocking users
-  }
-
-  return { allowed: true, retryAfterMs: 0 };
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export function rateLimitResponse(retryAfterMs: number): Response {
-  const retryAfterSec = Math.ceil(retryAfterMs / 1000);
-  return new Response(
-    JSON.stringify({
-      error: 'Rate limit exceeded. Too many users are using the app right now. Please try again in a moment.',
-      type: 'rate_limit',
-      retryAfter: retryAfterSec,
-    }),
-    {
-      status: 429,
-      headers: {
-        'Content-Type': 'application/json',
-        'Retry-After': String(retryAfterSec),
-      },
-    },
-  );
+export async function waitForRateLimit(kv: KVNamespace): Promise<void> {
+  for (let attempt = 0; attempt < 5; attempt++) {
+    const now = Date.now();
+
+    let state: RateLimitState;
+
+    try {
+      const raw = await kv.get(KV_KEY);
+      state = raw ? JSON.parse(raw) : { count: 0, windowStart: now };
+    } catch {
+      return;
+    }
+
+    if (now - state.windowStart >= WINDOW_MS) {
+      state = { count: 0, windowStart: now };
+    }
+
+    if (state.count < MAX_REQUESTS) {
+      state.count += 1;
+
+      try {
+        await kv.put(KV_KEY, JSON.stringify(state), { expirationTtl: 120 });
+      } catch {
+        // KV write failed — allow the request through
+      }
+
+      return;
+    }
+
+    const waitMs = Math.min(WINDOW_MS - (now - state.windowStart), MAX_WAIT_MS);
+
+    if (attempt >= 4) {
+      return;
+    }
+
+    await sleep(waitMs);
+  }
 }

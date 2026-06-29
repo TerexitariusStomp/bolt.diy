@@ -8,17 +8,13 @@ import { LLMManager } from '~/lib/modules/llm/manager';
 import type { ModelInfo } from '~/lib/modules/llm/types';
 import { getApiKeysFromCookie, getProviderSettingsFromCookie } from '~/lib/api/cookies';
 import { createScopedLogger } from '~/utils/logger';
-import { checkRateLimit, rateLimitResponse } from '~/lib/.server/rate-limiter';
+import { waitForRateLimit } from '~/lib/.server/rate-limiter';
 
 export async function action(args: ActionFunctionArgs) {
   const kv = (args.context as any)?.cloudflare?.env?.RATE_LIMIT_KV as KVNamespace | undefined;
 
   if (kv) {
-    const rateCheck = await checkRateLimit(kv);
-
-    if (!rateCheck.allowed) {
-      return rateLimitResponse(rateCheck.retryAfterMs);
-    }
+    await waitForRateLimit(kv);
   }
 
   return llmCallAction(args);
