@@ -201,10 +201,10 @@ export class LLMManager {
   }
 
   getDefaultProvider(): BaseProvider {
-    const googleProvider = this._providers.get('Google');
+    const openRouterProvider = this._providers.get('OpenRouter');
 
-    if (googleProvider) {
-      return googleProvider;
+    if (openRouterProvider) {
+      return openRouterProvider;
     }
 
     const firstProvider = this._providers.values().next().value;
