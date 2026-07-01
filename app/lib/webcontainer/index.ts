@@ -44,6 +44,19 @@ if (!import.meta.env.SSR) {
 
           // Handle both uncaught exceptions and unhandled promise rejections
           if (message.type === 'PREVIEW_UNCAUGHT_EXCEPTION' || message.type === 'PREVIEW_UNHANDLED_REJECTION') {
+            // Filter out errors from browser extension content scripts
+            const errorSource = 'message' in message ? message.message : '';
+            const stackTrace = message.stack || '';
+            const isExtensionError =
+              errorSource.includes('contentscript.js') ||
+              stackTrace.includes('contentscript.js') ||
+              (errorSource.includes('document.body is null') && stackTrace.includes('contentscript'));
+
+            if (isExtensionError) {
+              console.log('[WebContainer] Filtered out browser extension error:', errorSource);
+              return;
+            }
+
             const isPromise = message.type === 'PREVIEW_UNHANDLED_REJECTION';
             const title = isPromise ? 'Unhandled Promise Rejection' : 'Uncaught Exception';
             workbenchStore.actionAlert.set({
