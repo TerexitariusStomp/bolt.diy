@@ -295,6 +295,9 @@ export class ActionRunner {
       unreachable('Shell terminal not found');
     }
 
+    // Check for missing dependencies before starting dev server
+    await this.#ensureDependenciesInstalled(shell);
+
     const resp = await shell.executeCommand(this.runnerId.get(), action.content, () => {
       logger.debug(`[${action.type}]:Aborting Action\n\n`, action);
       action.abort();
@@ -306,6 +309,69 @@ export class ActionRunner {
     }
 
     return resp;
+  }
+
+  async #ensureDependenciesInstalled(shell: BoltShell) {
+    try {
+      const webcontainer = await this.#webcontainer;
+
+      // Read vite.config.js or vite.config.ts
+      let viteConfig = '';
+
+      try {
+        viteConfig = await webcontainer.fs.readFile('vite.config.js', 'utf-8');
+      } catch {
+        try {
+          viteConfig = await webcontainer.fs.readFile('vite.config.ts', 'utf-8');
+        } catch {
+          return; // No vite config, nothing to check
+        }
+      }
+
+      // Extract import specifiers from vite config
+      const importRegex = /import\s+(?:[\w\s{},*]+\s+from\s+)?['"]([^'"./][^'"]*)['"]/g;
+      const imports = new Set<string>();
+      let match;
+
+      while ((match = importRegex.exec(viteConfig)) !== null) {
+        const pkg = match[1];
+
+        // Skip Node.js built-ins
+        if (!pkg.startsWith('node:') && !['path', 'fs', 'url', 'os', 'crypto'].includes(pkg)) {
+          // Get the base package name (handle scoped packages)
+          const basePkg = pkg.startsWith('@') ? pkg.split('/').slice(0, 2).join('/') : pkg.split('/')[0];
+          imports.add(basePkg);
+        }
+      }
+
+      if (imports.size === 0) {
+        return;
+      }
+
+      // Check which packages are missing from node_modules
+      const missing: string[] = [];
+
+      for (const pkg of imports) {
+        try {
+          await webcontainer.fs.readFile(`node_modules/${pkg}/package.json`, 'utf-8');
+        } catch {
+          missing.push(pkg);
+        }
+      }
+
+      if (missing.length > 0) {
+        logger.info(`[ActionRunner] Auto-installing missing dependencies: ${missing.join(', ')}`);
+
+        const installCmd = `npm install ${missing.join(' ')}`;
+        const installResp = await shell.executeCommand(this.runnerId.get(), installCmd);
+
+        if (installResp?.exitCode !== 0) {
+          logger.error(`[ActionRunner] Failed to auto-install missing dependencies: ${installResp?.output}`);
+        }
+      }
+    } catch (error) {
+      logger.error('[ActionRunner] Error checking dependencies:', error);
+    }
   }
 
   async #runFileAction(action: ActionState) {
