@@ -1,38 +1,35 @@
-#!/usr/bin/env bash
+#!/bin/bash
+# Sync upstream stackblitz-labs/bolt.diy prompt files into this fork
+# while preserving our WebContainer-specific tweaks.
+
 set -euo pipefail
 
-# Sync script: pulls latest changes from upstream bolt.diy
-# and merges them into our fork while preserving customizations
+UPSTREAM_REMOTE="${UPSTREAM_REMOTE:-upstream}"
+UPSTREAM_BRANCH="${UPSTREAM_BRANCH:-main}"
+PROMPT_FILES=(
+  app/lib/common/prompts/prompts.ts
+  app/lib/common/prompts/new-prompt.ts
+  app/lib/common/prompts/optimized.ts
+  app/lib/common/prompt-library.ts
+)
 
-echo "=== Syncing with upstream bolt.diy ==="
+echo "Fetching ${UPSTREAM_REMOTE}/${UPSTREAM_BRANCH}..."
+git fetch "${UPSTREAM_REMOTE}" "${UPSTREAM_BRANCH}" --depth=1
 
-git fetch upstream
-
-UPSTREAM_COMMIT=$(git rev-parse upstream/main)
-LOCAL_COMMIT=$(git rev-parse HEAD)
-
-if [ "$UPSTREAM_COMMIT" = "$LOCAL_COMMIT" ]; then
-  echo "Already up to date with upstream."
-  exit 0
-fi
-
-echo "Upstream has new changes. Merging..."
-git merge upstream/main --no-edit
-
-if [ $? -ne 0 ]; then
-  echo ""
-  echo "Merge conflicts detected. Resolve them manually, then:"
-  echo "  git add ."
-  echo "  git commit"
-  echo ""
-  echo "Key files we customize (likely conflict zones):"
-  echo "  - app/utils/constants.ts (DEFAULT_MODEL)"
-  echo "  - app/lib/modules/llm/manager.ts (getDefaultProvider)"
-  echo "  - app/routes/_index.tsx (page title)"
-  echo "  - wrangler.toml (custom domain)"
-  exit 1
-fi
+echo "Syncing prompt files from upstream..."
+for file in "${PROMPT_FILES[@]}"; do
+  if git cat-file -e "${UPSTREAM_REMOTE}/${UPSTREAM_BRANCH}:${file}" 2>/dev/null; then
+    mkdir -p "$(dirname "$file")"
+    git show "${UPSTREAM_REMOTE}/${UPSTREAM_BRANCH}:${file}" > "${file}.upstream"
+    echo "  fetched ${file}"
+  else
+    echo "  upstream ${file} not found"
+  fi
+done
 
 echo ""
-echo "Sync complete. Push to your fork with:"
-echo "  git push origin main"
+echo "Upstream versions saved to *.upstream files."
+echo "Manually merge improvements, then run:"
+echo "  rm app/lib/common/prompts/*.upstream"
+echo "After merging, verify with:"
+echo "  pnpm lint:fix && pnpm run build"
