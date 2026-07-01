@@ -1,115 +1,13 @@
 import ignore from 'ignore';
 import type { ProviderInfo } from '~/types/model';
-import type { Template } from '~/types/template';
 import { STARTER_TEMPLATES } from './constants';
 
-const starterTemplateSelectionPrompt = (templates: Template[]) => `
-You are an experienced developer who helps people choose the best starter template for their projects.
-IMPORTANT: Vite is preferred
-IMPORTANT: Only choose shadcn templates if the user explicitly asks for shadcn.
-
-Available templates:
-<template>
-  <name>blank</name>
-  <description>Empty starter for simple scripts and trivial tasks that don't require a full template setup</description>
-  <tags>basic, script</tags>
-</template>
-${templates
-  .map(
-    (template) => `
-<template>
-  <name>${template.name}</name>
-  <description>${template.description}</description>
-  ${template.tags ? `<tags>${template.tags.join(', ')}</tags>` : ''}
-</template>
-`,
-  )
-  .join('\n')}
-
-Response Format:
-<selection>
-  <templateName>{selected template name}</templateName>
-  <title>{a proper title for the project}</title>
-</selection>
-
-Examples:
-
-<example>
-User: I need to build a todo app
-Response:
-<selection>
-  <templateName>react-basic-starter</templateName>
-  <title>Simple React todo application</title>
-</selection>
-</example>
-
-<example>
-User: Write a script to generate numbers from 1 to 100
-Response:
-<selection>
-  <templateName>blank</templateName>
-  <title>script to generate numbers from 1 to 100</title>
-</selection>
-</example>
-
-Instructions:
-1. For trivial tasks and simple scripts, always recommend the blank template
-2. For more complex projects, recommend templates from the provided list
-3. Follow the exact XML format
-4. Consider both technical requirements and tags
-5. If no perfect match exists, recommend the closest option
-
-Important: Provide only the selection tags in your response, no additional text.
-MOST IMPORTANT: YOU DONT HAVE TIME TO THINK JUST START RESPONDING BASED ON HUNCH 
-`;
-
-const templates: Template[] = STARTER_TEMPLATES.filter((t) => !t.name.includes('shadcn'));
-
-const parseSelectedTemplate = (llmOutput: string): { template: string; title: string } | null => {
-  try {
-    // Extract content between <templateName> tags
-    const templateNameMatch = llmOutput.match(/<templateName>(.*?)<\/templateName>/);
-    const titleMatch = llmOutput.match(/<title>(.*?)<\/title>/);
-
-    if (!templateNameMatch) {
-      return null;
-    }
-
-    return { template: templateNameMatch[1].trim(), title: titleMatch?.[1].trim() || 'Untitled Project' };
-  } catch (error) {
-    console.error('Error parsing template selection:', error);
-    return null;
-  }
-};
-
-export const selectStarterTemplate = async (options: { message: string; model: string; provider: ProviderInfo }) => {
-  const { message, model, provider } = options;
-  const requestBody = {
-    message,
-    model,
-    provider,
-    system: starterTemplateSelectionPrompt(templates),
+export const selectStarterTemplate = async (_options: { message: string; model: string; provider: ProviderInfo }) => {
+  // Always use built-in React+Vite template to avoid LLM call failures
+  return {
+    template: 'react-vite-built-in',
+    title: 'React + Vite App',
   };
-  const response = await fetch('/api/llmcall', {
-    method: 'POST',
-    body: JSON.stringify(requestBody),
-  });
-  const respJson: { text: string } = await response.json();
-  console.log(respJson);
-
-  const { text } = respJson;
-  const selectedTemplate = parseSelectedTemplate(text);
-
-  if (selectedTemplate) {
-    return selectedTemplate;
-  } else {
-    console.log('No template selected, using blank template');
-
-    return {
-      template: 'blank',
-      title: '',
-    };
-  }
 };
 
 const getGitHubRepoContent = async (repoName: string): Promise<{ name: string; path: string; content: string }[]> => {
@@ -131,7 +29,124 @@ const getGitHubRepoContent = async (repoName: string): Promise<{ name: string; p
   }
 };
 
+const BUILT_IN_REACT_VITE_FILES = [
+  {
+    name: 'package.json',
+    path: 'package.json',
+    content: `{
+  "name": "react-vite-app",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.0.8"
+  }
+}`,
+  },
+  {
+    name: 'index.html',
+    path: 'index.html',
+    content: `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React App</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>`,
+  },
+  {
+    name: 'vite.config.js',
+    path: 'vite.config.js',
+    content: `import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    host: true,
+  },
+})`,
+  },
+  {
+    name: 'main.jsx',
+    path: 'src/main.jsx',
+    content: `import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App.jsx'
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+)`,
+  },
+  {
+    name: 'App.jsx',
+    path: 'src/App.jsx',
+    content: `import React from 'react'
+
+export default function App() {
+  return (
+    <div style={{ fontFamily: 'sans-serif', textAlign: 'center', padding: '2rem' }}>
+      <h1>Hello from React + Vite</h1>
+      <p>Edit src/App.jsx to get started</p>
+    </div>
+  )
+}`,
+  },
+];
+
+function getBuiltInReactViteTemplate(title?: string) {
+  const assistantMessage = `
+Bolt is initializing your project with the required files using the React + Vite template.
+<boltArtifact id="imported-files" title="${title || 'Create initial files'}" type="bundled">
+${BUILT_IN_REACT_VITE_FILES.map(
+  (file) =>
+    `<boltAction type="file" filePath="${file.path}">
+${file.content}
+</boltAction>`,
+).join('\n')}
+</boltArtifact>
+`;
+
+  const userMessage = `
+---
+template import is done, and you can now use the imported files,
+edit only the files that need to be changed, and you can create new files as needed.
+DO NOT EDIT/WRITE ANY FILES THAT ALREADY EXIST IN THE PROJECT AND DOES NOT NEED TO BE MODIFIED
+---
+Now that the Template is imported please continue with my original request
+
+IMPORTANT: Dont Forget to install the dependencies before running the app by using \`npm install && npm run dev\`
+`;
+
+  return {
+    assistantMessage,
+    userMessage,
+  };
+}
+
 export async function getTemplates(templateName: string, title?: string) {
+  // Handle built-in React+Vite template (no GitHub fetch needed)
+  if (templateName === 'react-vite-built-in') {
+    return getBuiltInReactViteTemplate(title);
+  }
+
   const template = STARTER_TEMPLATES.find((t) => t.name == templateName);
 
   if (!template) {
