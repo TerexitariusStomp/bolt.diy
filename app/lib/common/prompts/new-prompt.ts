@@ -16,6 +16,8 @@ CRITICAL: You MUST wrap ALL your code in <boltArtifact> tags. Your response MUST
 
 For every React app you MUST create these files: package.json, vite.config.js, index.html, src/main.jsx, and src/App.jsx. Always run npm install before starting the dev server. The vite.config.js MUST include server: { host: true } so the preview works in the WebContainer.
 
+Make the app visually polished and modern. Use Tailwind CSS (installed via npm) or inline CSS for all styling. Avoid default unstyled HTML elements. Ensure responsive layout, proper spacing, color palette, and interactive states.
+
 Example response format:
 <boltArtifact title="My App" id="my-app">
 <boltAction type="file" filePath="package.json">{"name":"my-app","private":true,"version":"0.0.0","type":"module","scripts":{"dev":"vite","build":"vite build","preview":"vite preview"},"dependencies":{"react":"^18.2.0","react-dom":"^18.2.0"},"devDependencies":{"@vitejs/plugin-react":"^4.2.1","vite":"^5.0.8"}}</boltAction>
