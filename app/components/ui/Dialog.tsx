@@ -437,7 +437,7 @@ export function SelectionDialog({
             <Button
               onClick={handleConfirm}
               disabled={selectedItems.length === 0}
-              className="bg-accent-500 text-white hover:bg-accent-600 disabled:opacity-50 disabled:pointer-events-none"
+              className="bg-accent-500 text-black hover:bg-accent-600 disabled:opacity-50 disabled:pointer-events-none"
             >
               {confirmLabel}
             </Button>
