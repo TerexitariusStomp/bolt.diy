@@ -51,10 +51,10 @@ const inlineThemeCode = stripIndents`
   setTutorialKitTheme();
 
   function setTutorialKitTheme() {
-    let theme = localStorage.getItem('bolt_theme');
+    let theme = localStorage.getItem('chimera_theme');
 
     if (!theme) {
-      theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      theme = 'dark';
     }
 
     document.querySelector('html')?.setAttribute('data-theme', theme);

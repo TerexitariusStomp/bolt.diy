@@ -351,12 +351,18 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
         <div className="flex flex-col lg:flex-row overflow-y-auto w-full h-full">
           <div className={classNames(styles.Chat, 'flex flex-col flex-grow lg:min-w-[var(--chat-min-width)] h-full')}>
             {!chatStarted && (
-              <div id="intro" className="mt-[16vh] max-w-2xl mx-auto text-center px-4 lg:px-0">
-                <h1 className="text-3xl lg:text-6xl font-bold text-bolt-elements-textPrimary mb-4 animate-fade-in">
-                  Where ideas begin
+              <div className="flex flex-col items-center text-center px-4 pt-20 pb-6 animate-fade-in">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/[0.03] text-sm text-bolt-elements-textSecondary mb-6">
+                  <span className="w-2 h-2 rounded-full bg-[#4ade80] shadow-[0_0_8px_#4ade80]" />
+                  Chimera App Builder
+                </div>
+                <h1 className="text-4xl lg:text-7xl font-extrabold tracking-tight mb-5 max-w-3xl">
+                  <span className="bg-gradient-to-r from-[#00e5ff] to-[#a855f7] bg-clip-text text-transparent">
+                    Build apps with AI
+                  </span>
                 </h1>
-                <p className="text-md lg:text-xl mb-8 text-bolt-elements-textSecondary animate-fade-in animation-delay-200">
-                  Bring ideas to life in seconds or get help on existing projects.
+                <p className="text-base lg:text-lg text-bolt-elements-textSecondary max-w-xl mb-4">
+                  Describe your idea in plain language and Chimera generates a complete, styled React app in seconds.
                 </p>
               </div>
             )}

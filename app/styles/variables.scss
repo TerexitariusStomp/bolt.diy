@@ -106,20 +106,20 @@
   --modern-scrollbar-thumb-backgroundHover: rgba(74, 74, 74, 0.8);
 }
 
-/* Color Tokens Dark Theme */
+/* Color Tokens Dark Theme — Chimera brand */
 :root,
 :root[data-theme='dark'] {
-  --bolt-elements-borderColor: theme('colors.alpha.white.10');
+  --bolt-elements-borderColor: rgba(255, 255, 255, 0.06);
   --bolt-elements-borderColorActive: theme('colors.accent.500');
 
-  --bolt-elements-bg-depth-1: theme('colors.gray.950');
-  --bolt-elements-bg-depth-2: theme('colors.gray.900');
-  --bolt-elements-bg-depth-3: theme('colors.gray.800');
-  --bolt-elements-bg-depth-4: theme('colors.alpha.white.5');
+  --bolt-elements-bg-depth-1: #030308;
+  --bolt-elements-bg-depth-2: rgba(255, 255, 255, 0.03);
+  --bolt-elements-bg-depth-3: rgba(255, 255, 255, 0.06);
+  --bolt-elements-bg-depth-4: rgba(255, 255, 255, 0.04);
 
-  --bolt-elements-textPrimary: theme('colors.white');
-  --bolt-elements-textSecondary: theme('colors.gray.400');
-  --bolt-elements-textTertiary: theme('colors.gray.500');
+  --bolt-elements-textPrimary: #e8e2d8;
+  --bolt-elements-textSecondary: #7a7468;
+  --bolt-elements-textTertiary: #5a5548;
 
   --bolt-elements-code-background: theme('colors.gray.800');
   --bolt-elements-code-text: theme('colors.white');
