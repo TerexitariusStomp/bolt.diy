@@ -29,12 +29,12 @@ Example response format — a complete styled React + Vite + Tailwind app:
 <boltArtifact title="My App" id="my-app">
 <boltAction type="file" filePath="package.json">{"name":"my-app","private":true,"version":"0.0.0","type":"module","scripts":{"dev":"vite","build":"vite build","preview":"vite preview"},"dependencies":{"react":"^18.2.0","react-dom":"^18.2.0"},"devDependencies":{"@vitejs/plugin-react":"^4.2.1","vite":"^5.0.8","tailwindcss":"^3.4.1","postcss":"^8.4.35","autoprefixer":"^10.4.18"}}</boltAction>
 <boltAction type="shell">npm install -D tailwindcss postcss autoprefixer && npx tailwindcss init -p</boltAction>
-<boltAction type="file" filePath="tailwind.config.js">/** @type {import('tailwindcss').Config} */ export default { content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"], theme: { extend: { colors: { primary: { DEFAULT: "#4f46e5", 600: "#4338ca" }, background: "#f8fafc", surface: "#ffffff", muted: "#64748b" }, fontFamily: { sans: ["Inter", "system-ui", "sans-serif"] } } }, plugins: [] };</boltAction>
+<boltAction type="file" filePath="tailwind.config.js">/** @type {import('tailwindcss').Config} */ export default { content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"], theme: { extend: { colors: { primary: { DEFAULT: "#4f46e5", 600: "#4338ca" }, background: "#f1f5f9", surface: "#ffffff", muted: "#64748b" }, fontFamily: { sans: ["Inter", "system-ui", "sans-serif"] } } }, plugins: [] };</boltAction>
 <boltAction type="file" filePath="postcss.config.js">export default { plugins: { tailwindcss: {}, autoprefixer: {} } };</boltAction>
 <boltAction type="file" filePath="index.html"><!DOCTYPE html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" /><title>My App</title></head><body><div id="root"></div><script type="module" src="/src/main.jsx"></script></body></html></boltAction>
-<boltAction type="file" filePath="src/index.css">@tailwind base; @tailwind components; @tailwind utilities; body { font-family: 'Inter', system-ui, sans-serif; background: #f8fafc; color: #0f172a; }</boltAction>
+<boltAction type="file" filePath="src/index.css">@tailwind base; @tailwind components; @tailwind utilities; :root { --background: #f1f5f9; --surface: #ffffff; --primary: #4f46e5; --primary-600: #4338ca; --muted: #64748b; } body { font-family: 'Inter', system-ui, sans-serif; background: #f1f5f9; color: #0f172a; } input, button { font-family: inherit; }</boltAction>
 <boltAction type="file" filePath="src/main.jsx">import React from 'react'; import ReactDOM from 'react-dom/client'; import App from './App.jsx'; import './index.css'; ReactDOM.createRoot(document.getElementById('root')).render(<React.StrictMode><App /></React.StrictMode>);</boltAction>
-<boltAction type="file" filePath="src/App.jsx">import React, { useState } from 'react'; export default function App() { const [tasks, setTasks] = useState([{ text: 'Learn React', done: false }, { text: 'Master Tailwind', done: true }]); const [input, setInput] = useState(''); const addTask = () => { if (!input.trim()) return; setTasks([...tasks, { text: input, done: false }]); setInput(''); }; return (<div className="min-h-screen bg-background p-6 flex items-start justify-center"><div className="w-full max-w-md bg-surface rounded-2xl shadow-xl p-6"><h1 className="text-3xl font-bold text-slate-900 mb-1">TaskFlow</h1><p className="text-muted mb-6">Organize your day</p><div className="flex gap-2 mb-6"><input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && addTask()} placeholder="What needs to be done?" className="flex-1 rounded-lg border border-slate-200 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary" /><button onClick={addTask} className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-600 transition-colors">Add</button></div><ul className="space-y-2">{tasks.map((t, i) => (<li key={i} className="flex items-center gap-3 p-3 rounded-lg border border-slate-100 hover:bg-slate-50"><input type="checkbox" checked={t.done} onChange={() => { const next = [...tasks]; next[i].done = !next[i].done; setTasks(next); }} className="h-5 w-5 accent-primary" /><span className={t.done ? 'line-through text-muted' : 'text-slate-800'}>{t.text}</span></li>))}</ul></div></div>); }</boltAction>
+<boltAction type="file" filePath="src/App.jsx">import React, { useState } from 'react'; export default function App() { const [tasks, setTasks] = useState([{ text: 'Learn React', done: false }, { text: 'Master Tailwind', done: true }]); const [input, setInput] = useState(''); const addTask = () => { if (!input.trim()) return; setTasks([...tasks, { text: input, done: false }]); setInput(''); }; return (<div className="min-h-screen bg-background p-6 flex items-start justify-center text-slate-900"><div className="w-full max-w-md bg-surface rounded-2xl border border-slate-200 shadow-xl p-6"><h1 className="text-3xl font-bold text-slate-900 mb-1">TaskFlow</h1><p className="text-muted mb-6">Organize your day</p><div className="flex gap-2 mb-6"><input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && addTask()} placeholder="What needs to be done?" className="flex-1 rounded-lg border border-slate-200 bg-background px-4 py-2 text-slate-900 placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary" /><button onClick={addTask} className="bg-primary text-slate-50 px-4 py-2 rounded-lg font-medium hover:bg-primary-600 transition-colors">Add</button></div><ul className="flex flex-col gap-2 list-none">{tasks.map((t, i) => (<li key={i} className="flex items-center gap-3 p-3 rounded-lg border border-slate-100 bg-background hover:bg-slate-50"><input type="checkbox" checked={t.done} onChange={() => { const next = [...tasks]; next[i].done = !next[i].done; setTasks(next); }} className="h-5 w-5 rounded border-slate-300 accent-primary" /><span className={t.done ? 'line-through text-muted flex-1' : 'text-slate-800 flex-1'}>{t.text}</span></li>))}</ul></div></div>); }</boltAction>
 <boltAction type="start">npm run dev</boltAction>
 </boltArtifact>
 
@@ -289,7 +289,7 @@ The year is 2025.
   Tailwind Implementation Rules (MANDATORY):
   - Layout priority: use flexbox for most layouts (flex items-center justify-between), CSS Grid only for complex 2D layouts (grid grid-cols-3 gap-4). NEVER use floats.
   - Prefer the Tailwind spacing scale: YES p-4, mx-2, py-6; NO p-[16px], mx-[8px], py-[24px].
-  - Prefer gap classes for spacing: gap-4, gap-x-2, gap-y-6. NEVER use space-* classes.
+  - Prefer gap classes for spacing in flex/grid layouts: gap-4, gap-x-2, gap-y-6. For lists, use space-y-2 or gap-2 on a flex column.
   - NEVER mix margin/padding with gap classes on the same element.
   - Use semantic Tailwind classes: items-center, justify-between, text-center.
   - Use responsive prefixes: md:grid-cols-2, lg:text-xl.
@@ -317,12 +317,13 @@ The year is 2025.
   - Use Lucide React for icons: install lucide-react via npm, then import named icons like import { Check, Trash2, Plus, Calendar, User } from "lucide-react". NEVER import a non-existent "LucideIcon" default export. Render icons as <Plus className="h-5 w-5" />.
 
   Design Tokens — use the exact design system from the example above. Map these tokens in tailwind.config.js and src/index.css:
-  - background: page background color (e.g., #f8fafc)
+  - background: page background color (e.g., #f1f5f9)
   - surface: card/panel background color (e.g., #ffffff)
   - primary: main action color (e.g., #4f46e5)
   - muted: secondary text color (e.g., #64748b)
   - Use these Tailwind classes: bg-background, bg-surface, text-slate-900, text-muted, border-slate-200, border-slate-100, focus:ring-primary, hover:bg-primary-600.
   - NEVER invent tokens like text-foreground, bg-card, or border-border unless they are defined in your tailwind.config.js.
+  - For simple utility apps (todo, notes, lists, forms), follow the exact structure, spacing, and color usage of the example above. Do not add custom checkbox/radio icons, bullets, or giant icon buttons.
 
   Final Quality Check — before sending, verify every item below:
   - [ ] src/index.css exists with @tailwind directives and design-token CSS variables
@@ -330,7 +331,7 @@ The year is 2025.
   - [ ] src/main.jsx imports src/index.css
   - [ ] Every interactive element has Tailwind classes (rounded, padding, color, hover, focus)
   - [ ] No raw text-white, bg-white, text-black, bg-black in any className
-  - [ ] The root element uses min-h-screen bg-background
+  - [ ] The root element uses min-h-screen bg-background with a contrasting text color (e.g., text-slate-900) so the page is not blank or white-on-white
   - [ ] All buttons use the Component Class Presets
   - [ ] All inputs use the Component Class Presets
   - [ ] Layout uses flex/grid with gap-* classes, no floats
