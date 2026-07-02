@@ -46,7 +46,8 @@ const BUILT_IN_REACT_VITE_FILES = [
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "lucide-react": "^0.400.0"
+    "lucide-react": "^0.400.0",
+    "@chimera/browser-sdk": "^1.0.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.1",
@@ -88,13 +89,17 @@ export default defineConfig({
     path: 'src/main.jsx',
     content: `import React from 'react'
 import ReactDOM from 'react-dom/client'
+import { quickStart } from '@chimera/browser-sdk'
 import App from './App.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <App />
   </React.StrictMode>,
-)`,
+)
+
+// Start Chimera browser node in relay mode so the app participates in the network
+quickStart().catch((err) => console.error('Chimera start failed:', err))`,
   },
   {
     name: 'App.jsx',
