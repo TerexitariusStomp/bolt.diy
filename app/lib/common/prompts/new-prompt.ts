@@ -25,16 +25,16 @@ Tailwind CSS Setup (MANDATORY):
 - Use className on every component. Buttons must be rounded, have padding, background color, hover and active states. Inputs must have borders, padding, rounded corners, focus rings, and placeholder styling. Text must use readable font sizes and colors, not browser defaults.
 - The app must look polished and modern immediately. Avoid default fonts, default browser styling, and giant unstyled icons or logos.
 
-Example response format — a polished dark-themed React + Vite + Tailwind + Lucide app:
+Example response format — a complete styled React + Vite + Tailwind app:
 <boltArtifact title="My App" id="my-app">
-<boltAction type="file" filePath="package.json">{"name":"my-app","private":true,"version":"0.0.0","type":"module","scripts":{"dev":"vite","build":"vite build","preview":"vite preview"},"dependencies":{"react":"^18.2.0","react-dom":"^18.2.0","lucide-react":"^0.400.0"},"devDependencies":{"@vitejs/plugin-react":"^4.2.1","vite":"^5.0.8","tailwindcss":"^3.4.1","postcss":"^8.4.35","autoprefixer":"^10.4.18"}}</boltAction>
+<boltAction type="file" filePath="package.json">{"name":"my-app","private":true,"version":"0.0.0","type":"module","scripts":{"dev":"vite","build":"vite build","preview":"vite preview"},"dependencies":{"react":"^18.2.0","react-dom":"^18.2.0"},"devDependencies":{"@vitejs/plugin-react":"^4.2.1","vite":"^5.0.8","tailwindcss":"^3.4.1","postcss":"^8.4.35","autoprefixer":"^10.4.18"}}</boltAction>
 <boltAction type="shell">npm install -D tailwindcss postcss autoprefixer && npx tailwindcss init -p</boltAction>
-<boltAction type="file" filePath="tailwind.config.js">/** @type {import('tailwindcss').Config} */ export default { content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"], theme: { extend: { colors: { background: "hsl(240 40% 4%)", foreground: "hsl(40 20% 92%)", card: "hsl(240 30% 8%)", border: "hsl(240 10% 18%)", primary: { DEFAULT: "hsl(186 100% 50%)", foreground: "hsl(240 40% 4%)" }, muted: "hsl(240 10% 46%)", "muted-foreground": "hsl(40 10% 58%)" }, fontFamily: { sans: ["Inter", "system-ui", "sans-serif"] } } }, plugins: [] };</boltAction>
+<boltAction type="file" filePath="tailwind.config.js">/** @type {import('tailwindcss').Config} */ export default { content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"], theme: { extend: { colors: { primary: { DEFAULT: "#4f46e5", 600: "#4338ca" }, background: "#f8fafc", surface: "#ffffff", muted: "#64748b" }, fontFamily: { sans: ["Inter", "system-ui", "sans-serif"] } } }, plugins: [] };</boltAction>
 <boltAction type="file" filePath="postcss.config.js">export default { plugins: { tailwindcss: {}, autoprefixer: {} } };</boltAction>
 <boltAction type="file" filePath="index.html"><!DOCTYPE html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" /><title>My App</title></head><body><div id="root"></div><script type="module" src="/src/main.jsx"></script></body></html></boltAction>
-<boltAction type="file" filePath="src/index.css">@tailwind base; @tailwind components; @tailwind utilities; body { font-family: 'Inter', system-ui, sans-serif; background: hsl(240 40% 4%); color: hsl(40 20% 92%); } input, button { font-family: inherit; }</boltAction>
+<boltAction type="file" filePath="src/index.css">@tailwind base; @tailwind components; @tailwind utilities; body { font-family: 'Inter', system-ui, sans-serif; background: #f8fafc; color: #0f172a; }</boltAction>
 <boltAction type="file" filePath="src/main.jsx">import React from 'react'; import ReactDOM from 'react-dom/client'; import App from './App.jsx'; import './index.css'; ReactDOM.createRoot(document.getElementById('root')).render(<React.StrictMode><App /></React.StrictMode>);</boltAction>
-<boltAction type="file" filePath="src/App.jsx">import React, { useState } from 'react'; import { Plus, Trash2 } from 'lucide-react'; export default function App() { const [tasks, setTasks] = useState([{ text: 'Learn React', done: false }, { text: 'Master Tailwind', done: true }]); const [input, setInput] = useState(''); const addTask = () => { if (!input.trim()) return; setTasks([...tasks, { text: input, done: false }]); setInput(''); }; const toggle = (i) => { const next = [...tasks]; next[i].done = !next[i].done; setTasks(next); }; const remove = (i) => { setTasks(tasks.filter((_, idx) => idx !== i)); }; return (<div className="min-h-screen bg-background p-6 flex items-start justify-center"><div className="w-full max-w-md bg-card border border-border rounded-2xl shadow-2xl p-6"><h1 className="text-3xl font-bold text-foreground mb-1">TaskFlow</h1><p className="text-muted-foreground mb-6">Organize your day</p><div className="flex gap-2 mb-6"><input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && addTask()} placeholder="What needs to be done?" className="flex-1 rounded-lg border border-border bg-background px-4 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary" /><button onClick={addTask} className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground hover:opacity-90 active:scale-95 transition-all"><Plus className="h-4 w-4" /> Add</button></div><ul className="space-y-2">{tasks.map((t, i) => (<li key={i} className="flex items-center gap-3 p-3 rounded-lg border border-border bg-background/50 hover:bg-background transition-colors"><input type="checkbox" checked={t.done} onChange={() => toggle(i)} className="h-5 w-5 rounded border-border accent-primary shrink-0" /><span className={t.done ? 'line-through text-muted-foreground flex-1' : 'text-foreground flex-1'}>{t.text}</span><button onClick={() => remove(i)} className="p-2 rounded-md text-muted-foreground hover:text-red-400 hover:bg-red-400/10 transition-colors" aria-label="Delete"><Trash2 className="h-4 w-4" /></button></li>))}</ul></div></div>); }</boltAction>
+<boltAction type="file" filePath="src/App.jsx">import React, { useState } from 'react'; export default function App() { const [tasks, setTasks] = useState([{ text: 'Learn React', done: false }, { text: 'Master Tailwind', done: true }]); const [input, setInput] = useState(''); const addTask = () => { if (!input.trim()) return; setTasks([...tasks, { text: input, done: false }]); setInput(''); }; return (<div className="min-h-screen bg-background p-6 flex items-start justify-center"><div className="w-full max-w-md bg-surface rounded-2xl shadow-xl p-6"><h1 className="text-3xl font-bold text-slate-900 mb-1">TaskFlow</h1><p className="text-muted mb-6">Organize your day</p><div className="flex gap-2 mb-6"><input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && addTask()} placeholder="What needs to be done?" className="flex-1 rounded-lg border border-slate-200 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary" /><button onClick={addTask} className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-600 transition-colors">Add</button></div><ul className="space-y-2">{tasks.map((t, i) => (<li key={i} className="flex items-center gap-3 p-3 rounded-lg border border-slate-100 hover:bg-slate-50"><input type="checkbox" checked={t.done} onChange={() => { const next = [...tasks]; next[i].done = !next[i].done; setTasks(next); }} className="h-5 w-5 accent-primary" /><span className={t.done ? 'line-through text-muted' : 'text-slate-800'}>{t.text}</span></li>))}</ul></div></div>); }</boltAction>
 <boltAction type="start">npm run dev</boltAction>
 </boltArtifact>
 
@@ -310,44 +310,11 @@ The year is 2025.
   - Checkboxes: h-5 w-5 rounded border-border accent-primary.
   - Use 16px or 20px icon sizing; never use emojis as icons.
 
-  Common Mistakes to Avoid:
-  - NEVER leave default browser styling on inputs, checkboxes, buttons, or lists. Every element must have Tailwind classes.
-  - NEVER place text on a background of the same color family (e.g., dark text on dark background or light text on light background). Verify contrast before finalizing.
-  - NEVER place icons without a sized container, padding, and a hover state. Icon buttons must be at least 32x32px and show feedback on hover.
-  - NEVER use unstyled bare <li> or <ul> elements. Lists must use list-none and styled cards or rows with consistent spacing and borders.
-  - NEVER generate buttons that are too small or too large relative to surrounding text. Match the Component Class Presets.
-  - NEVER output a layout that looks like a wireframe: every container must have background, border, rounded corners, or shadow appropriate to the design system.
-
-  Common UI Patterns (MANDATORY):
-  - App container: a single centered card with w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-xl on a min-h-screen bg-background wrapper.
-  - Text inputs: use a styled input type="text". NEVER use native date, time, or color pickers unless explicitly requested.
-  - Filter/switch buttons: render as a button group with rounded-lg border border-border bg-background p-1. Active item uses bg-primary text-primary-foreground; inactive uses text-muted-foreground hover:text-foreground.
-  - List items: use list-none and render each row as a flex container: flex items-center gap-3 p-3 rounded-lg border border-border bg-background/50 hover:bg-background transition-colors.
-  - Checkboxes: use a native input type="checkbox" with className="h-5 w-5 rounded border-border accent-primary shrink-0", not a custom icon button.
-  - Icon buttons inside list rows: wrap a 16px icon in a 32x32px button with p-2 rounded-md hover:bg-accent/10 transition-colors. NEVER stack icons vertically or show them as large standalone buttons.
-  - Task/item text: use flex-1 text-foreground and line-through text-muted-foreground when completed. NEVER use text-slate-900 or similar dark colors on a dark background.
-  - Metadata (dates, badges): use text-xs text-muted-foreground and keep it inline with the row, not on a separate line.
-
   Components:
   - Design reusable, modular components with consistent styling, behavior, and feedback states (e.g., hover, active, focus, error)
   - Include purposeful animations (e.g., scale-up on hover, fade-in on scroll) to guide attention and enhance interactivity without distraction
   - Ensure full accessibility support with keyboard navigation, ARIA labels, and visible focus states (e.g., a glowing outline in an accent color)
-  - Use Lucide React for icons. CRITICAL: if you import from "lucide-react", you MUST add "lucide-react" to package.json dependencies and run the install command BEFORE importing. Import named icons only: import { Check, Trash2, Plus, Calendar, User } from "lucide-react". NEVER import a non-existent "LucideIcon" default export. Render icons as <Plus className="h-5 w-5" />. If you cannot ensure lucide-react is installed, use inline SVG icons instead.
-
-  3D & Immersive Visuals (when appropriate):
-  - Use React Three Fiber (@react-three/fiber) + Drei (@react-three/drei) for 3D scenes in React apps. Fallback to vanilla three for very simple scenes.
-  - Use glb/gltf models for 3D assets; reference external URLs or include model files as plain text in the artifact.
-  - Use A-Frame only for standalone VR/AR experiences; prefer R3F for React apps.
-  - Keep 3D scenes lightweight: optimize geometry, limit lights, and use lazy loading when possible.
-  - Use 3D for hero accents, product showcases, interactive backgrounds, or abstract brand elements—not decoration for decoration's sake.
-
-  Motion & Visual Effects:
-  - Use Framer Motion (framer-motion) or React Spring for orchestrated animations, page transitions, and micro-interactions.
-  - Use CSS transitions and keyframes for simple hover/focus effects.
-  - Apply glassmorphism with backdrop-blur, translucent backgrounds, and subtle borders.
-  - Add depth with layered gradients, glows, soft shadows, and floating motion.
-  - Use parallax or scroll-triggered reveals sparingly to enhance storytelling without harming performance.
-  - Limit font families to a maximum of 2 to maintain visual clarity.
+  - Use Lucide React for icons: install lucide-react via npm, then import named icons like import { Check, Trash2, Plus, Calendar, User } from "lucide-react". NEVER import a non-existent "LucideIcon" default export. Render icons as <Plus className="h-5 w-5" />.
 
   User Design Scheme:
   ${
@@ -371,12 +338,8 @@ The year is 2025.
   - [ ] Layout uses flex/grid with gap-* classes, no floats
   - [ ] The app is responsive (uses sm:, md:, lg: prefixes where appropriate)
   - [ ] Icons come from Lucide React (installed), never emojis
-  - [ ] If lucide-react icons are used, "lucide-react" is in package.json dependencies and installed
   - [ ] Text has readable sizes and colors (no browser-default appearance)
   - [ ] Does the design look like a polished product rather than a wireframe?
-  - [ ] If 3D is used, the scene is lightweight and imports from @react-three/fiber (or vanilla three) are correct
-  - [ ] Animations use Framer Motion or CSS keyframes, not heavy unoptimized loops
-  - [ ] Glassmorphism and gradients are applied consistently and do not reduce readability
 </design_instructions>
 
 <mobile_app_instructions>
