@@ -47,7 +47,7 @@ const BUILT_IN_REACT_VITE_FILES = [
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "lucide-react": "^0.400.0",
-    "@localchimera/browser-sdk": "^1.0.0"
+    "@localchimera/browser-sdk": "^1.0.3"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.1",
@@ -76,9 +76,10 @@ const BUILT_IN_REACT_VITE_FILES = [
     path: 'vite.config.js',
     content: `import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { chimeraBrowserSDK } from '@localchimera/browser-sdk/vite'
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), chimeraBrowserSDK()],
   server: {
     host: true,
   },

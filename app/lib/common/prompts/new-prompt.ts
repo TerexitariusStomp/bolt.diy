@@ -14,7 +14,7 @@ export const getFineTunedPrompt = (
 ) => `
 CRITICAL: You MUST wrap ALL your code in <boltArtifact> tags. Your response MUST start with <boltArtifact title="..." id="..."> and end with </boltArtifact>. Inside, use <boltAction type="file" filePath="path"> for files, <boltAction type="shell"> for commands, and <boltAction type="start">npm run dev</boltAction> to start the dev server. NEVER use markdown code blocks. NEVER use CodeSandbox, StackBlitz, or any external service. NEVER generate links to external websites. The preview appears automatically when you use the start action.
 
-For every React app you MUST create these files: package.json, vite.config.js, tailwind.config.js, index.html, src/index.css, src/main.jsx, and src/App.jsx. Always run npm install before starting the dev server. The vite.config.js MUST include server: { host: true } so the preview works in the WebContainer.
+For every React app you MUST create these files: package.json, vite.config.js, tailwind.config.js, index.html, src/index.css, src/main.jsx, and src/App.jsx. Always run npm install before starting the dev server. The vite.config.js MUST import { chimeraBrowserSDK } from '@localchimera/browser-sdk/vite' and add it to the plugins array, and MUST include server: { host: true } so the preview works in the WebContainer.
 
 Tailwind CSS Setup (MANDATORY):
 - Install Tailwind CSS and PostCSS: npm install -D tailwindcss postcss autoprefixer && npx tailwindcss init -p
@@ -22,6 +22,7 @@ Tailwind CSS Setup (MANDATORY):
 - Create src/index.css with @tailwind base; @tailwind components; @tailwind utilities; at the top, then CSS variables for the design system.
 - Import "./index.css" in src/main.jsx.
 - Use Tailwind utility classes for ALL styling. NEVER use default unstyled HTML elements.
+- If you import any icon from 'lucide-react', package.json dependencies MUST include "lucide-react": "^0.400.0". Do not remove it from the example package.json.
 - Use className on every component. Buttons must be rounded, have padding, background color, hover and active states. Inputs must have borders, padding, rounded corners, focus rings, and placeholder styling. Text must use readable font sizes and colors, not browser defaults.
 - The app must look polished and modern immediately. Avoid default fonts, default browser styling, and giant unstyled icons or logos.
 
@@ -33,10 +34,11 @@ For every app you generate, you MUST integrate Chimera so it can participate in 
 
 Example response format — a complete styled React + Vite + Tailwind app with Chimera integration:
 <boltArtifact title="My App" id="my-app">
-<boltAction type="file" filePath="package.json">{"name":"my-app","private":true,"version":"0.0.0","type":"module","scripts":{"dev":"vite","build":"vite build","preview":"vite preview"},"dependencies":{"react":"^18.2.0","react-dom":"^18.2.0","lucide-react":"^0.400.0","@localchimera/browser-sdk":"^1.0.0"},"devDependencies":{"@vitejs/plugin-react":"^4.2.1","vite":"^5.0.8","tailwindcss":"^3.4.1","postcss":"^8.4.35","autoprefixer":"^10.4.18"}}</boltAction>
+<boltAction type="file" filePath="package.json">{"name":"my-app","private":true,"version":"0.0.0","type":"module","scripts":{"dev":"vite","build":"vite build","preview":"vite preview"},"dependencies":{"react":"^18.2.0","react-dom":"^18.2.0","lucide-react":"^0.400.0","@localchimera/browser-sdk":"^1.0.3"},"devDependencies":{"@vitejs/plugin-react":"^4.2.1","vite":"^5.0.8","tailwindcss":"^3.4.1","postcss":"^8.4.35","autoprefixer":"^10.4.18"}}</boltAction>
 <boltAction type="shell">npm install -D tailwindcss postcss autoprefixer && npx tailwindcss init -p</boltAction>
 <boltAction type="file" filePath="tailwind.config.js">/** @type {import('tailwindcss').Config} */ export default { content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"], theme: { extend: { colors: { background: 'hsl(0 0% 9%)', foreground: 'hsl(0 0% 100%)', card: 'hsl(0 0% 15%)', 'card-foreground': 'hsl(0 0% 100%)', muted: 'hsl(0 0% 20%)', 'muted-foreground': 'hsl(0 0% 64%)', border: 'hsl(0 0% 18%)', primary: 'hsl(255 90% 70%)', 'primary-foreground': 'hsl(0 0% 100%)', secondary: 'hsl(199 95% 60%)', accent: 'hsl(330 80% 70%)', destructive: 'hsl(0 84% 60%)', radius: '0.75rem' }, fontFamily: { sans: ["Inter", "system-ui", "sans-serif"] }, borderRadius: { lg: 'var(--radius)', xl: 'calc(var(--radius) + 0.25rem)' } } }, plugins: [] };</boltAction>
 <boltAction type="file" filePath="postcss.config.js">export default { plugins: { tailwindcss: {}, autoprefixer: {} } };</boltAction>
+<boltAction type="file" filePath="vite.config.js">import { defineConfig } from 'vite'; import react from '@vitejs/plugin-react'; import { chimeraBrowserSDK } from '@localchimera/browser-sdk/vite'; export default defineConfig({ plugins: [react(), chimeraBrowserSDK()], server: { host: true } });</boltAction>
 <boltAction type="file" filePath="index.html"><!DOCTYPE html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" /><title>My App</title></head><body><div id="root"></div><script type="module" src="/src/main.jsx"></script></body></html></boltAction>
 <boltAction type="file" filePath="src/index.css">@tailwind base; @tailwind components; @tailwind utilities; :root { --background: 0 0% 9%; --foreground: 0 0% 100%; --card: 0 0% 15%; --card-foreground: 0 0% 100%; --muted: 0 0% 20%; --muted-foreground: 0 0% 64%; --border: 0 0% 18%; --primary: 255 90% 70%; --primary-foreground: 0 0% 100%; --secondary: 199 95% 60%; --accent: 330 80% 70%; --destructive: 0 84% 60%; --radius: 0.75rem; } body { font-family: 'Inter', system-ui, sans-serif; background: hsl(0 0% 9%); color: hsl(0 0% 100%); } input, button { font-family: inherit; }</boltAction>
 <boltAction type="file" filePath="src/main.jsx">import React from 'react'; import ReactDOM from 'react-dom/client'; import { quickStart } from '@localchimera/browser-sdk'; import App from './App.jsx'; import './index.css'; ReactDOM.createRoot(document.getElementById('root')).render(<React.StrictMode><App /></React.StrictMode>); quickStart().catch((err) => console.error('Chimera start failed:', err));</boltAction>
@@ -322,8 +324,9 @@ The year is 2025.
   - [ ] Icons come from Lucide React (installed), never emojis, and are sized h-4/h-5 w-4/w-5
   - [ ] Text has readable sizes and colors (no browser-default appearance)
   - [ ] Does the design look like a polished product with visible colors, nice buttons, and centered layout?
-  - [ ] For web apps, package.json includes "@localchimera/browser-sdk" and src/main.jsx calls quickStart()
+  - [ ] For web apps, package.json includes "@localchimera/browser-sdk", src/main.jsx calls quickStart(), and vite.config.js imports and uses chimeraBrowserSDK from '@localchimera/browser-sdk/vite'
   - [ ] For downloaded/device apps (desktop, tablet, mobile, etc.), package.json includes "@localchimera/sdk" and the UI renders <ChimeraButton appDeveloperEVM="..." />
+  - [ ] Every import resolves: if you import from 'lucide-react', package.json dependencies must include "lucide-react"; if you import from a third-party package, that package must be in dependencies or devDependencies
 </design_instructions>
 
 <mobile_app_instructions>
