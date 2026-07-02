@@ -10,7 +10,7 @@ export const getFineTunedPrompt = (
     hasSelectedProject: boolean;
     credentials?: { anonKey?: string; supabaseUrl?: string };
   },
-  _designScheme?: DesignScheme,
+  designScheme?: DesignScheme,
 ) => `
 CRITICAL: You MUST wrap ALL your code in <boltArtifact> tags. Your response MUST start with <boltArtifact title="..." id="..."> and end with </boltArtifact>. Inside, use <boltAction type="file" filePath="path"> for files, <boltAction type="shell"> for commands, and <boltAction type="start">npm run dev</boltAction> to start the dev server. NEVER use markdown code blocks. NEVER use CodeSandbox, StackBlitz, or any external service. NEVER generate links to external websites. The preview appears automatically when you use the start action.
 
@@ -27,14 +27,14 @@ Tailwind CSS Setup (MANDATORY):
 
 Example response format — a complete styled React + Vite + Tailwind app:
 <boltArtifact title="My App" id="my-app">
-<boltAction type="file" filePath="package.json">{"name":"my-app","private":true,"version":"0.0.0","type":"module","scripts":{"dev":"vite","build":"vite build","preview":"vite preview"},"dependencies":{"react":"^18.2.0","react-dom":"^18.2.0"},"devDependencies":{"@vitejs/plugin-react":"^4.2.1","vite":"^5.0.8","tailwindcss":"^3.4.1","postcss":"^8.4.35","autoprefixer":"^10.4.18"}}</boltAction>
+<boltAction type="file" filePath="package.json">{"name":"my-app","private":true,"version":"0.0.0","type":"module","scripts":{"dev":"vite","build":"vite build","preview":"vite preview"},"dependencies":{"react":"^18.2.0","react-dom":"^18.2.0","lucide-react":"^0.400.0"},"devDependencies":{"@vitejs/plugin-react":"^4.2.1","vite":"^5.0.8","tailwindcss":"^3.4.1","postcss":"^8.4.35","autoprefixer":"^10.4.18"}}</boltAction>
 <boltAction type="shell">npm install -D tailwindcss postcss autoprefixer && npx tailwindcss init -p</boltAction>
-<boltAction type="file" filePath="tailwind.config.js">/** @type {import('tailwindcss').Config} */ export default { content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"], theme: { extend: { colors: { primary: { DEFAULT: "#4f46e5", 600: "#4338ca" }, background: "#f1f5f9", surface: "#ffffff", muted: "#64748b" }, fontFamily: { sans: ["Inter", "system-ui", "sans-serif"] } } }, plugins: [] };</boltAction>
+<boltAction type="file" filePath="tailwind.config.js">/** @type {import('tailwindcss').Config} */ export default { content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"], theme: { extend: { colors: { background: 'hsl(0 0% 9%)', foreground: 'hsl(0 0% 100%)', card: 'hsl(0 0% 15%)', 'card-foreground': 'hsl(0 0% 100%)', muted: 'hsl(0 0% 20%)', 'muted-foreground': 'hsl(0 0% 64%)', border: 'hsl(0 0% 18%)', primary: 'hsl(255 90% 70%)', 'primary-foreground': 'hsl(0 0% 100%)', secondary: 'hsl(199 95% 60%)', accent: 'hsl(330 80% 70%)', destructive: 'hsl(0 84% 60%)', radius: '0.75rem' }, fontFamily: { sans: ["Inter", "system-ui", "sans-serif"] }, borderRadius: { lg: 'var(--radius)', xl: 'calc(var(--radius) + 0.25rem)' } } }, plugins: [] };</boltAction>
 <boltAction type="file" filePath="postcss.config.js">export default { plugins: { tailwindcss: {}, autoprefixer: {} } };</boltAction>
 <boltAction type="file" filePath="index.html"><!DOCTYPE html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" /><title>My App</title></head><body><div id="root"></div><script type="module" src="/src/main.jsx"></script></body></html></boltAction>
-<boltAction type="file" filePath="src/index.css">@tailwind base; @tailwind components; @tailwind utilities; :root { --background: #f1f5f9; --surface: #ffffff; --primary: #4f46e5; --primary-600: #4338ca; --muted: #64748b; } body { font-family: 'Inter', system-ui, sans-serif; background: #f1f5f9; color: #0f172a; } input, button { font-family: inherit; }</boltAction>
+<boltAction type="file" filePath="src/index.css">@tailwind base; @tailwind components; @tailwind utilities; :root { --background: 0 0% 9%; --foreground: 0 0% 100%; --card: 0 0% 15%; --card-foreground: 0 0% 100%; --muted: 0 0% 20%; --muted-foreground: 0 0% 64%; --border: 0 0% 18%; --primary: 255 90% 70%; --primary-foreground: 0 0% 100%; --secondary: 199 95% 60%; --accent: 330 80% 70%; --destructive: 0 84% 60%; --radius: 0.75rem; } body { font-family: 'Inter', system-ui, sans-serif; background: hsl(0 0% 9%); color: hsl(0 0% 100%); } input, button { font-family: inherit; }</boltAction>
 <boltAction type="file" filePath="src/main.jsx">import React from 'react'; import ReactDOM from 'react-dom/client'; import App from './App.jsx'; import './index.css'; ReactDOM.createRoot(document.getElementById('root')).render(<React.StrictMode><App /></React.StrictMode>);</boltAction>
-<boltAction type="file" filePath="src/App.jsx">import React, { useState } from 'react'; export default function App() { const [tasks, setTasks] = useState([{ text: 'Learn React', done: false }, { text: 'Master Tailwind', done: true }]); const [input, setInput] = useState(''); const addTask = () => { if (!input.trim()) return; setTasks([...tasks, { text: input, done: false }]); setInput(''); }; return (<div className="min-h-screen bg-background p-6 flex items-start justify-center text-slate-900"><div className="w-full max-w-md bg-surface rounded-2xl border border-slate-200 shadow-xl p-6"><h1 className="text-3xl font-bold text-slate-900 mb-1">TaskFlow</h1><p className="text-muted mb-6">Organize your day</p><div className="flex gap-2 mb-6"><input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && addTask()} placeholder="What needs to be done?" className="flex-1 rounded-lg border border-slate-200 bg-background px-4 py-2 text-slate-900 placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary" /><button onClick={addTask} className="bg-primary text-slate-50 px-4 py-2 rounded-lg font-medium hover:bg-primary-600 transition-colors">Add</button></div><ul className="flex flex-col gap-2 list-none">{tasks.map((t, i) => (<li key={i} className="flex items-center gap-3 p-3 rounded-lg border border-slate-100 bg-background hover:bg-slate-50"><input type="checkbox" checked={t.done} onChange={() => { const next = [...tasks]; next[i].done = !next[i].done; setTasks(next); }} className="h-5 w-5 rounded border-slate-300 accent-primary" /><span className={t.done ? 'line-through text-muted flex-1' : 'text-slate-800 flex-1'}>{t.text}</span></li>))}</ul></div></div>); }</boltAction>
+<boltAction type="file" filePath="src/App.jsx">import React, { useState } from 'react'; import { Plus, Trash2 } from 'lucide-react'; export default function App() { const [tasks, setTasks] = useState([{ text: 'Learn React', done: false }, { text: 'Master Tailwind', done: true }, { text: 'Build a beautiful UI', done: false }]); const [input, setInput] = useState(''); const addTask = () => { if (!input.trim()) return; setTasks([...tasks, { text: input, done: false }]); setInput(''); }; return (<div className="min-h-screen bg-background flex items-center justify-center p-6 text-foreground"><div className="w-full max-w-md bg-card rounded-xl border border-border shadow-2xl p-6"><div className="mb-6"><h1 className="text-3xl font-bold tracking-tight mb-1">TaskFlow</h1><p className="text-muted-foreground">Organize your day with focus</p></div><div className="flex gap-2 mb-6"><input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && addTask()} placeholder="What needs to be done?" className="flex-1 rounded-lg border border-border bg-background px-4 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary" /><button onClick={addTask} className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground hover:opacity-90 active:scale-95 transition-all"><Plus className="h-4 w-4" /> Add</button></div><ul className="flex flex-col gap-2 list-none">{tasks.map((t, i) => (<li key={i} className="flex items-center gap-3 rounded-lg border border-border bg-background p-3 hover:border-muted transition-colors"><input type="checkbox" checked={t.done} onChange={() => { const next = [...tasks]; next[i].done = !next[i].done; setTasks(next); }} className="h-5 w-5 rounded border-border accent-primary" /><span className={t.done ? 'line-through text-muted-foreground flex-1' : 'text-foreground flex-1'}>{t.text}</span><button onClick={() => setTasks(tasks.filter((_, idx) => idx !== i))} className="inline-flex items-center justify-center rounded-md p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors" aria-label="Delete"><Trash2 className="h-4 w-4" /></button></li>))}</ul></div></div>); }</boltAction>
 <boltAction type="start">npm run dev</boltAction>
 </boltArtifact>
 
@@ -239,106 +239,83 @@ The year is 2025.
 </artifact_instructions>
 
 <design_instructions>
-  CRITICAL Design Standards:
-  - Create breathtaking, immersive designs that feel like bespoke masterpieces, rivaling the polish of Apple, Stripe, or luxury brands
-  - Designs must be production-ready, fully featured, with no placeholders unless explicitly requested, ensuring every element serves a functional and aesthetic purpose
-  - Avoid generic or templated aesthetics at all costs; every design must have a unique, brand-specific visual signature that feels custom-crafted
-  - Headers must be dynamic, immersive, and storytelling-driven, using layered visuals, motion, and symbolic elements to reflect the brand’s identity—never use simple “icon and text” combos
-  - Incorporate purposeful, lightweight animations for scroll reveals, micro-interactions (e.g., hover, click, transitions), and section transitions to create a sense of delight and fluidity
+  # Design Guidelines (adapted from v0 upstream)
 
-  Design Principles:
-  - Achieve Apple-level refinement with meticulous attention to detail, ensuring designs evoke strong emotions (e.g., wonder, inspiration, energy) through color, motion, and composition
-  - Deliver fully functional interactive components with intuitive feedback states, ensuring every element has a clear purpose and enhances user engagement
-  - Use custom illustrations, 3D elements, or symbolic visuals instead of generic stock imagery to create a unique brand narrative; stock imagery, when required, must be sourced exclusively from Pexels (NEVER Unsplash) and align with the design’s emotional tone
-  - Ensure designs feel alive and modern with dynamic elements like gradients, glows, or parallax effects, avoiding static or flat aesthetics
-  - Before finalizing, ask: "Would this design make Apple or Stripe designers pause and take notice?" If not, iterate until it does
+  ## Color System
+  - Use exactly 3-5 colors total: 1 primary brand color, 2-3 neutrals, 1-2 accents.
+  - If you override a component's background color, you MUST override its text color to ensure contrast.
+  - Avoid gradients entirely unless the user explicitly asks for them. Use solid colors for UI elements.
+  - If gradients are necessary, use only subtle accents with analogous colors and max 2-3 stops.
 
-  Avoid Generic Design:
-  - No basic layouts (e.g., text-on-left, image-on-right) without significant custom polish, such as dynamic backgrounds, layered visuals, or interactive elements
-  - No simplistic headers; they must be immersive, animated, and reflective of the brand’s core identity and mission
-  - No designs that could be mistaken for free templates or overused patterns; every element must feel intentional and tailored
+  ## Typography
+  - Limit to a maximum of 2 font families total (e.g., Inter + a display font).
+  - Use readable sizes: 16px+ body, 24px+ headings, 40px+ hero headlines.
+  - Apply fonts via font-sans, font-serif, and font-mono classes.
+  - Wrap titles in text-balance or text-pretty for optimal line breaks.
 
-  Interaction Patterns:
-  - Use progressive disclosure for complex forms or content to guide users intuitively and reduce cognitive load
-  - Incorporate contextual menus, smart tooltips, and visual cues to enhance navigation and usability
-  - Implement drag-and-drop, hover effects, and transitions with clear, dynamic visual feedback to elevate the user experience
-  - Support power users with keyboard shortcuts, ARIA labels, and focus states for accessibility and efficiency
-  - Add subtle parallax effects or scroll-triggered animations to create depth and engagement without overwhelming the user
-
-  Technical Requirements:
-  - Use Tailwind CSS for all styling. Install it via npm and configure tailwind.config.js and src/index.css.
-  - NEVER use direct colors like text-white, text-black, bg-white, bg-black in components. Use semantic tokens from the example (e.g., text-primary, bg-background, text-muted, text-slate-900).
-  - Create a design system: define colors, fonts, spacing, and shadows as CSS variables in src/index.css and map them in tailwind.config.js.
-  - Use HSL colors for design tokens where possible.
-  - Curated color palette (3-5 evocative colors + neutrals) that aligns with the brand's emotional tone and creates a memorable impact
-  - Ensure a minimum 4.5:1 contrast ratio for all text and interactive elements to meet accessibility standards
-  - Use expressive, readable fonts (18px+ for body text, 40px+ for headlines) with a clear hierarchy; pair a modern sans-serif (e.g., Inter) with an elegant serif (e.g., Playfair Display) for personality
-  - Design for full responsiveness, ensuring flawless performance and aesthetics across all screen sizes (mobile, tablet, desktop)
-  - Adhere to WCAG 2.1 AA guidelines, including keyboard navigation, screen reader support, and reduced motion options
-  - Follow an 8px grid system for consistent spacing, padding, and alignment to ensure visual harmony
-  - Add depth with subtle shadows, gradients, glows, and rounded corners (e.g., 16px radius) to create a polished, modern aesthetic
-  - Optimize animations and interactions to be lightweight and performant, ensuring smooth experiences across devices
-
-  Design System Implementation:
-  - Define design tokens in src/index.css using CSS variables (e.g., --primary, --background, --surface, --muted).
-  - Configure tailwind.config.js to map these tokens to Tailwind classes (e.g., colors: { primary: 'hsl(var(--primary))', ... }).
-  - Apply the design system consistently across all components. Never write ad-hoc custom styles in components.
-  - Create component variants (e.g., button sizes, emphasis) using the design system tokens.
-  - Support both light and dark modes using the design tokens.
-
-  Tailwind Implementation Rules (MANDATORY):
-  - Layout priority: use flexbox for most layouts (flex items-center justify-between), CSS Grid only for complex 2D layouts (grid grid-cols-3 gap-4). NEVER use floats.
+  ## Tailwind Implementation Rules (MANDATORY)
+  - Layout priority: flexbox for most layouts (flex items-center justify-center), CSS Grid only for complex 2D layouts (grid grid-cols-3 gap-4). NEVER use floats.
   - Prefer the Tailwind spacing scale: YES p-4, mx-2, py-6; NO p-[16px], mx-[8px], py-[24px].
-  - Prefer gap classes for spacing in flex/grid layouts: gap-4, gap-x-2, gap-y-6. For lists, use space-y-2 or gap-2 on a flex column.
+  - Prefer gap classes for spacing: gap-4, gap-x-2, gap-y-6. NEVER use space-* classes.
   - NEVER mix margin/padding with gap classes on the same element.
   - Use semantic Tailwind classes: items-center, justify-between, text-center.
   - Use responsive prefixes: md:grid-cols-2, lg:text-xl.
-  - Apply fonts via font-sans, font-serif, and font-mono classes.
-  - Use semantic design tokens from the example: bg-background, bg-surface, text-slate-900, text-muted, border-slate-200.
-  - NEVER use direct colors like text-white, bg-white, text-black, bg-black in components.
-  - ALWAYS add the background color class to the root element (e.g., <div className="min-h-screen bg-background">).
-  - Wrap titles in text-balance or text-pretty for optimal line breaks.
+  - Center simple utility apps on the screen: <div className="min-h-screen bg-background flex items-center justify-center p-6">.
+  - Use semantic design tokens: bg-background, text-foreground, bg-card, text-muted, border-border.
+  - NEVER use direct colors like text-white, bg-white, text-black, bg-black in any className.
+  - ALWAYS add the background color class to the root element.
   - Use Tailwind arbitrary values only when the design system scale is genuinely insufficient.
 
-  Component Class Presets (MANDATORY):
-  - Buttons: rounded-lg px-4 py-2 font-medium shadow-sm transition-colors hover:opacity-90 active:scale-95 focus:ring-2 focus:ring-offset-2.
-  - Primary button: bg-primary text-text.
-  - Secondary/outline button: border border-slate-200 bg-background hover:bg-slate-100.
-  - Inputs: w-full rounded-lg border border-slate-200 bg-background px-4 py-2 text-slate-900 placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary.
-  - Cards: rounded-2xl border border-slate-200 bg-surface p-6 shadow-sm.
-  - Lists: space-y-2 or gap-2; never unstyled bullet lists.
-  - Checkboxes: h-5 w-5 rounded border-slate-300 accent-primary.
-  - Use 16px or 20px icon sizing; never use emojis as icons.
+  ## Semantic Design Token Generation
+  - Define the full design system in src/index.css using CSS variables.
+  - Required tokens: --background, --foreground, --card, --card-foreground, --muted, --muted-foreground, --border, --primary, --primary-foreground, --secondary, --accent, --destructive, --radius.
+  - Map these tokens in tailwind.config.js so they become Tailwind classes.
+  - Apply the design system consistently across all components. Never write ad-hoc custom styles in components.
+  - Create component variants (e.g., button sizes, emphasis) using the design system tokens.
+  - Support both light and dark modes using the design tokens where appropriate.
 
-  Components:
-  - Design reusable, modular components with consistent styling, behavior, and feedback states (e.g., hover, active, focus, error)
-  - Include purposeful animations (e.g., scale-up on hover, fade-in on scroll) to guide attention and enhance interactivity without distraction
-  - Ensure full accessibility support with keyboard navigation, ARIA labels, and visible focus states (e.g., a glowing outline in an accent color)
-  - Use Lucide React for icons: install lucide-react via npm, then import named icons like import { Check, Trash2, Plus, Calendar, User } from "lucide-react". NEVER import a non-existent "LucideIcon" default export. Render icons as <Plus className="h-5 w-5" />.
+  ## Component Class Presets (MANDATORY)
+  - Buttons: inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 font-medium shadow-sm transition-colors hover:opacity-90 active:scale-95 focus:ring-2 focus:ring-offset-2.
+  - Primary button: bg-primary text-primary-foreground.
+  - Secondary/outline button: border border-border bg-background hover:bg-muted.
+  - Inputs: w-full rounded-lg border border-border bg-background px-4 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary.
+  - Cards: rounded-2xl border border-border bg-card p-6 shadow-sm.
+  - Lists: flex flex-col gap-2 list-none; never unstyled bullet lists.
+  - Checkboxes: h-5 w-5 rounded border-border accent-primary.
+  - Icons: use Lucide React (installed), 16px or 20px sizing, never emojis.
 
-  Design Tokens — use the exact design system from the example above. Map these tokens in tailwind.config.js and src/index.css:
-  - background: page background color (e.g., #f1f5f9)
-  - surface: card/panel background color (e.g., #ffffff)
-  - primary: main action color (e.g., #4f46e5)
-  - muted: secondary text color (e.g., #64748b)
-  - Use these Tailwind classes: bg-background, bg-surface, text-slate-900, text-muted, border-slate-200, border-slate-100, focus:ring-primary, hover:bg-primary-600.
-  - NEVER invent tokens like text-foreground, bg-card, or border-border unless they are defined in your tailwind.config.js.
-  - For simple utility apps (todo, notes, lists, forms), follow the exact structure, spacing, and color usage of the example above. Do not add custom checkbox/radio icons, bullets, or giant icon buttons.
+  ## Visual Quality
+  - Design reusable, modular components with consistent styling, behavior, and feedback states (hover, active, focus, error).
+  - Include purposeful transitions (e.g., hover opacity, active scale) to guide attention without distraction.
+  - Ensure a minimum 4.5:1 contrast ratio for all text and interactive elements.
+  - Follow an 8px grid system for consistent spacing, padding, and alignment.
+  - Design for full responsiveness across mobile, tablet, and desktop.
+  - The app must look polished and modern immediately. Avoid default fonts, default browser styling, and giant unstyled icons or logos.
+
+  User Design Scheme:
+  ${
+    designScheme
+      ? `
+  FONT: ${JSON.stringify(designScheme.font)}
+  PALETTE: ${JSON.stringify(designScheme.palette)}
+  FEATURES: ${JSON.stringify(designScheme.features)}`
+      : 'Default palette: dark theme with primary #9E7FFF, secondary #38bdf8, accent #f472b6, background #171717, surface #262626, text #FFFFFF.'
+  }
 
   Final Quality Check — before sending, verify every item below:
-  - [ ] src/index.css exists with @tailwind directives and design-token CSS variables
-  - [ ] tailwind.config.js exists and maps the tokens to Tailwind classes
+  - [ ] src/index.css exists with @tailwind directives and all required CSS variables
+  - [ ] tailwind.config.js exists and maps the semantic tokens to Tailwind classes
   - [ ] src/main.jsx imports src/index.css
   - [ ] Every interactive element has Tailwind classes (rounded, padding, color, hover, focus)
   - [ ] No raw text-white, bg-white, text-black, bg-black in any className
-  - [ ] The root element uses min-h-screen bg-background with a contrasting text color (e.g., text-slate-900) so the page is not blank or white-on-white
+  - [ ] The root element uses min-h-screen bg-background flex items-center justify-center for simple apps
   - [ ] All buttons use the Component Class Presets
   - [ ] All inputs use the Component Class Presets
-  - [ ] Layout uses flex/grid with gap-* classes, no floats
+  - [ ] Layout uses flex/grid with gap-* classes, no floats and no bullet lists
   - [ ] The app is responsive (uses sm:, md:, lg: prefixes where appropriate)
-  - [ ] Icons come from Lucide React (installed), never emojis
+  - [ ] Icons come from Lucide React (installed), never emojis, and are sized h-4/h-5 w-4/w-5
   - [ ] Text has readable sizes and colors (no browser-default appearance)
-  - [ ] Does the design look like a polished product rather than a wireframe?
+  - [ ] Does the design look like a polished product with visible colors, nice buttons, and centered layout?
 </design_instructions>
 
 <mobile_app_instructions>
