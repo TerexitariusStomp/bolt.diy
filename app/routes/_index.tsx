@@ -6,10 +6,7 @@ import { Header } from '~/components/header/Header';
 import BackgroundRays from '~/components/ui/BackgroundRays';
 
 export const meta: MetaFunction = () => {
-  return [
-    { title: 'Chimera App Builder' },
-    { name: 'description', content: 'Build apps from natural language with Chimera' },
-  ];
+  return [{ title: 'Chimera' }, { name: 'description', content: 'Build apps from natural language with Chimera' }];
 };
 
 export const loader = () => json({});

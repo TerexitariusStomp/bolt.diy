@@ -25,8 +25,8 @@ const toastAnimation = cssTransition({
 export const links: LinksFunction = () => [
   {
     rel: 'icon',
-    href: '/favicon.ico',
-    type: 'image/x-icon',
+    href: '/logo-chimera-header.png',
+    type: 'image/png',
   },
   { rel: 'stylesheet', href: reactToastifyStyles },
   { rel: 'stylesheet', href: tailwindReset },
