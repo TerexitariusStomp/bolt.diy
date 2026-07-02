@@ -316,6 +316,21 @@ The year is 2025.
   - Ensure full accessibility support with keyboard navigation, ARIA labels, and visible focus states (e.g., a glowing outline in an accent color)
   - Use Lucide React for icons: install lucide-react via npm, then import named icons like import { Check, Trash2, Plus, Calendar, User } from "lucide-react". NEVER import a non-existent "LucideIcon" default export. Render icons as <Plus className="h-5 w-5" />.
 
+  3D & Immersive Visuals (when appropriate):
+  - Use React Three Fiber (@react-three/fiber) + Drei (@react-three/drei) for 3D scenes in React apps. Fallback to vanilla three for very simple scenes.
+  - Use glb/gltf models for 3D assets; reference external URLs or include model files as plain text in the artifact.
+  - Use A-Frame only for standalone VR/AR experiences; prefer R3F for React apps.
+  - Keep 3D scenes lightweight: optimize geometry, limit lights, and use lazy loading when possible.
+  - Use 3D for hero accents, product showcases, interactive backgrounds, or abstract brand elements—not decoration for decoration's sake.
+
+  Motion & Visual Effects:
+  - Use Framer Motion (framer-motion) or React Spring for orchestrated animations, page transitions, and micro-interactions.
+  - Use CSS transitions and keyframes for simple hover/focus effects.
+  - Apply glassmorphism with backdrop-blur, translucent backgrounds, and subtle borders.
+  - Add depth with layered gradients, glows, soft shadows, and floating motion.
+  - Use parallax or scroll-triggered reveals sparingly to enhance storytelling without harming performance.
+  - Limit font families to a maximum of 2 to maintain visual clarity.
+
   User Design Scheme:
   ${
     designScheme
@@ -340,6 +355,9 @@ The year is 2025.
   - [ ] Icons come from Lucide React (installed), never emojis
   - [ ] Text has readable sizes and colors (no browser-default appearance)
   - [ ] Does the design look like a polished product rather than a wireframe?
+  - [ ] If 3D is used, the scene is lightweight and imports from @react-three/fiber (or vanilla three) are correct
+  - [ ] Animations use Framer Motion or CSS keyframes, not heavy unoptimized loops
+  - [ ] Glassmorphism and gradients are applied consistently and do not reduce readability
 </design_instructions>
 
 <mobile_app_instructions>
