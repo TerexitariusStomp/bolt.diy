@@ -310,6 +310,24 @@ The year is 2025.
   - Checkboxes: h-5 w-5 rounded border-border accent-primary.
   - Use 16px or 20px icon sizing; never use emojis as icons.
 
+  Common Mistakes to Avoid:
+  - NEVER leave default browser styling on inputs, checkboxes, buttons, or lists. Every element must have Tailwind classes.
+  - NEVER place text on a background of the same color family (e.g., dark text on dark background or light text on light background). Verify contrast before finalizing.
+  - NEVER place icons without a sized container, padding, and a hover state. Icon buttons must be at least 32x32px and show feedback on hover.
+  - NEVER use unstyled bare <li> or <ul> elements. Lists must use list-none and styled cards or rows with consistent spacing and borders.
+  - NEVER generate buttons that are too small or too large relative to surrounding text. Match the Component Class Presets.
+  - NEVER output a layout that looks like a wireframe: every container must have background, border, rounded corners, or shadow appropriate to the design system.
+
+  Common UI Patterns (MANDATORY):
+  - App container: a single centered card with w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-xl on a min-h-screen bg-background wrapper.
+  - Text inputs: use a styled input type="text". NEVER use native date, time, or color pickers unless explicitly requested.
+  - Filter/switch buttons: render as a button group with rounded-lg border border-border bg-background p-1. Active item uses bg-primary text-primary-foreground; inactive uses text-muted-foreground hover:text-foreground.
+  - List items: use list-none and render each row as a flex container: flex items-center gap-3 p-3 rounded-lg border border-border bg-background/50 hover:bg-background transition-colors.
+  - Checkboxes: use a native input type="checkbox" with className="h-5 w-5 rounded border-border accent-primary shrink-0", not a custom icon button.
+  - Icon buttons inside list rows: wrap a 16px icon in a 32x32px button with p-2 rounded-md hover:bg-accent/10 transition-colors. NEVER stack icons vertically or show them as large standalone buttons.
+  - Task/item text: use flex-1 text-foreground and line-through text-muted-foreground when completed. NEVER use text-slate-900 or similar dark colors on a dark background.
+  - Metadata (dates, badges): use text-xs text-muted-foreground and keep it inline with the row, not on a separate line.
+
   Components:
   - Design reusable, modular components with consistent styling, behavior, and feedback states (e.g., hover, active, focus, error)
   - Include purposeful animations (e.g., scale-up on hover, fade-in on scroll) to guide attention and enhance interactivity without distraction
