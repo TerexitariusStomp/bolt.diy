@@ -286,6 +286,30 @@ The year is 2025.
   - Create component variants (e.g., button sizes, emphasis) using the design system tokens.
   - Support both light and dark modes using the design tokens.
 
+  Tailwind Implementation Rules (MANDATORY):
+  - Layout priority: use flexbox for most layouts (flex items-center justify-between), CSS Grid only for complex 2D layouts (grid grid-cols-3 gap-4). NEVER use floats.
+  - Prefer the Tailwind spacing scale: YES p-4, mx-2, py-6; NO p-[16px], mx-[8px], py-[24px].
+  - Prefer gap classes for spacing: gap-4, gap-x-2, gap-y-6. NEVER use space-* classes.
+  - NEVER mix margin/padding with gap classes on the same element.
+  - Use semantic Tailwind classes: items-center, justify-between, text-center.
+  - Use responsive prefixes: md:grid-cols-2, lg:text-xl.
+  - Apply fonts via font-sans, font-serif, and font-mono classes.
+  - Use semantic design tokens: bg-background, text-foreground, text-muted-foreground, border-border.
+  - NEVER use direct colors like text-white, bg-white, text-black, bg-black in components.
+  - ALWAYS add the background color class to the root element (e.g., <div className="min-h-screen bg-background">).
+  - Wrap titles in text-balance or text-pretty for optimal line breaks.
+  - Use Tailwind arbitrary values only when the design system scale is genuinely insufficient.
+
+  Component Class Presets (MANDATORY):
+  - Buttons: rounded-lg px-4 py-2 font-medium shadow-sm transition-colors hover:opacity-90 active:scale-95 focus:ring-2 focus:ring-offset-2.
+  - Primary button: bg-primary text-primary-foreground.
+  - Secondary/outline button: border border-border bg-background hover:bg-accent.
+  - Inputs: w-full rounded-lg border border-border bg-background px-4 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring.
+  - Cards: rounded-2xl border border-border bg-card p-6 shadow-sm.
+  - Lists: space-y-2 or gap-2; never unstyled bullet lists.
+  - Checkboxes: h-5 w-5 rounded border-border accent-primary.
+  - Use 16px or 20px icon sizing; never use emojis as icons.
+
   Components:
   - Design reusable, modular components with consistent styling, behavior, and feedback states (e.g., hover, active, focus, error)
   - Include purposeful animations (e.g., scale-up on hover, fade-in on scroll) to guide attention and enhance interactivity without distraction
@@ -302,12 +326,20 @@ The year is 2025.
       : 'None provided. Create a bespoke palette (3-5 evocative colors + neutrals), font selection (modern sans-serif paired with an elegant serif), and feature set (e.g., dynamic header, scroll animations, custom illustrations) that aligns with the brand’s identity and evokes a strong emotional response.'
   }
 
-  Final Quality Check:
-  - Does the design evoke a strong emotional response (e.g., wonder, inspiration, energy) and feel unforgettable?
-  - Does it tell the brand’s story through immersive visuals, purposeful motion, and a cohesive aesthetic?
-  - Is it technically flawless—responsive, accessible (WCAG 2.1 AA), and optimized for performance across devices?
-  - Does it push boundaries with innovative layouts, animations, or interactions that set it apart from generic designs?
-  - Would this design make a top-tier designer (e.g., from Apple or Stripe) stop and admire it?
+  Final Quality Check — before sending, verify every item below:
+  - [ ] src/index.css exists with @tailwind directives and design-token CSS variables
+  - [ ] tailwind.config.js exists and maps the tokens to Tailwind classes
+  - [ ] src/main.jsx imports src/index.css
+  - [ ] Every interactive element has Tailwind classes (rounded, padding, color, hover, focus)
+  - [ ] No raw text-white, bg-white, text-black, bg-black in any className
+  - [ ] The root element uses min-h-screen bg-background
+  - [ ] All buttons use the Component Class Presets
+  - [ ] All inputs use the Component Class Presets
+  - [ ] Layout uses flex/grid with gap-* classes, no floats
+  - [ ] The app is responsive (uses sm:, md:, lg: prefixes where appropriate)
+  - [ ] Icons come from Lucide React (installed), never emojis
+  - [ ] Text has readable sizes and colors (no browser-default appearance)
+  - [ ] Does the design look like a polished product rather than a wireframe?
 </design_instructions>
 
 <mobile_app_instructions>
