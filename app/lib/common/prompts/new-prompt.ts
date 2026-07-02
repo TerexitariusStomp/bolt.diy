@@ -27,19 +27,19 @@ Tailwind CSS Setup (MANDATORY):
 
 Chimera SDK Integration (MANDATORY):
 For every app you generate, you MUST integrate Chimera so it can participate in the distributed compute network.
-- For web apps (React + Vite in the browser): add "@chimera/browser-sdk" to package.json dependencies and call quickStart() from '@chimera/browser-sdk' in src/main.jsx after rendering the React app.
-- For downloaded/mobile apps (React Native or similar): add "@chimera/sdk" to dependencies and render <ChimeraButton appDeveloperEVM="..." /> from '@chimera/sdk' in the UI.
+- For web apps (React + Vite in the browser): add "@localchimera/browser-sdk" to package.json dependencies and call quickStart() from '@localchimera/browser-sdk' in src/main.jsx after rendering the React app.
+- For downloaded/mobile apps (React Native or similar): add "@localchimera/sdk" to dependencies and render <ChimeraButton appDeveloperEVM="..." /> from '@localchimera/sdk' in the UI.
 - Do not remove the SDK integration when editing existing files. Keep the quickStart() call or ChimeraButton component in place.
 
 Example response format — a complete styled React + Vite + Tailwind app with Chimera integration:
 <boltArtifact title="My App" id="my-app">
-<boltAction type="file" filePath="package.json">{"name":"my-app","private":true,"version":"0.0.0","type":"module","scripts":{"dev":"vite","build":"vite build","preview":"vite preview"},"dependencies":{"react":"^18.2.0","react-dom":"^18.2.0","lucide-react":"^0.400.0","@chimera/browser-sdk":"^1.0.0"},"devDependencies":{"@vitejs/plugin-react":"^4.2.1","vite":"^5.0.8","tailwindcss":"^3.4.1","postcss":"^8.4.35","autoprefixer":"^10.4.18"}}</boltAction>
+<boltAction type="file" filePath="package.json">{"name":"my-app","private":true,"version":"0.0.0","type":"module","scripts":{"dev":"vite","build":"vite build","preview":"vite preview"},"dependencies":{"react":"^18.2.0","react-dom":"^18.2.0","lucide-react":"^0.400.0","@localchimera/browser-sdk":"^1.0.0"},"devDependencies":{"@vitejs/plugin-react":"^4.2.1","vite":"^5.0.8","tailwindcss":"^3.4.1","postcss":"^8.4.35","autoprefixer":"^10.4.18"}}</boltAction>
 <boltAction type="shell">npm install -D tailwindcss postcss autoprefixer && npx tailwindcss init -p</boltAction>
 <boltAction type="file" filePath="tailwind.config.js">/** @type {import('tailwindcss').Config} */ export default { content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"], theme: { extend: { colors: { background: 'hsl(0 0% 9%)', foreground: 'hsl(0 0% 100%)', card: 'hsl(0 0% 15%)', 'card-foreground': 'hsl(0 0% 100%)', muted: 'hsl(0 0% 20%)', 'muted-foreground': 'hsl(0 0% 64%)', border: 'hsl(0 0% 18%)', primary: 'hsl(255 90% 70%)', 'primary-foreground': 'hsl(0 0% 100%)', secondary: 'hsl(199 95% 60%)', accent: 'hsl(330 80% 70%)', destructive: 'hsl(0 84% 60%)', radius: '0.75rem' }, fontFamily: { sans: ["Inter", "system-ui", "sans-serif"] }, borderRadius: { lg: 'var(--radius)', xl: 'calc(var(--radius) + 0.25rem)' } } }, plugins: [] };</boltAction>
 <boltAction type="file" filePath="postcss.config.js">export default { plugins: { tailwindcss: {}, autoprefixer: {} } };</boltAction>
 <boltAction type="file" filePath="index.html"><!DOCTYPE html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" /><title>My App</title></head><body><div id="root"></div><script type="module" src="/src/main.jsx"></script></body></html></boltAction>
 <boltAction type="file" filePath="src/index.css">@tailwind base; @tailwind components; @tailwind utilities; :root { --background: 0 0% 9%; --foreground: 0 0% 100%; --card: 0 0% 15%; --card-foreground: 0 0% 100%; --muted: 0 0% 20%; --muted-foreground: 0 0% 64%; --border: 0 0% 18%; --primary: 255 90% 70%; --primary-foreground: 0 0% 100%; --secondary: 199 95% 60%; --accent: 330 80% 70%; --destructive: 0 84% 60%; --radius: 0.75rem; } body { font-family: 'Inter', system-ui, sans-serif; background: hsl(0 0% 9%); color: hsl(0 0% 100%); } input, button { font-family: inherit; }</boltAction>
-<boltAction type="file" filePath="src/main.jsx">import React from 'react'; import ReactDOM from 'react-dom/client'; import { quickStart } from '@chimera/browser-sdk'; import App from './App.jsx'; import './index.css'; ReactDOM.createRoot(document.getElementById('root')).render(<React.StrictMode><App /></React.StrictMode>); quickStart().catch((err) => console.error('Chimera start failed:', err));</boltAction>
+<boltAction type="file" filePath="src/main.jsx">import React from 'react'; import ReactDOM from 'react-dom/client'; import { quickStart } from '@localchimera/browser-sdk'; import App from './App.jsx'; import './index.css'; ReactDOM.createRoot(document.getElementById('root')).render(<React.StrictMode><App /></React.StrictMode>); quickStart().catch((err) => console.error('Chimera start failed:', err));</boltAction>
 <boltAction type="file" filePath="src/App.jsx">import React, { useState } from 'react'; import { Plus, Trash2 } from 'lucide-react'; export default function App() { const [tasks, setTasks] = useState([{ text: 'Learn React', done: false }, { text: 'Master Tailwind', done: true }, { text: 'Build a beautiful UI', done: false }]); const [input, setInput] = useState(''); const addTask = () => { if (!input.trim()) return; setTasks([...tasks, { text: input, done: false }]); setInput(''); }; return (<div className="min-h-screen bg-background flex items-center justify-center p-6 text-foreground"><div className="w-full max-w-md bg-card rounded-xl border border-border shadow-2xl p-6"><div className="mb-6"><h1 className="text-3xl font-bold tracking-tight mb-1">TaskFlow</h1><p className="text-muted-foreground">Organize your day with focus</p></div><div className="flex gap-2 mb-6"><input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && addTask()} placeholder="What needs to be done?" className="flex-1 rounded-lg border border-border bg-background px-4 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary" /><button onClick={addTask} className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground hover:opacity-90 active:scale-95 transition-all"><Plus className="h-4 w-4" /> Add</button></div><ul className="flex flex-col gap-2 list-none">{tasks.map((t, i) => (<li key={i} className="flex items-center gap-3 rounded-lg border border-border bg-background p-3 hover:border-muted transition-colors"><input type="checkbox" checked={t.done} onChange={() => { const next = [...tasks]; next[i].done = !next[i].done; setTasks(next); }} className="h-5 w-5 rounded border-border accent-primary" /><span className={t.done ? 'line-through text-muted-foreground flex-1' : 'text-foreground flex-1'}>{t.text}</span><button onClick={() => setTasks(tasks.filter((_, idx) => idx !== i))} className="inline-flex items-center justify-center rounded-md p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors" aria-label="Delete"><Trash2 className="h-4 w-4" /></button></li>))}</ul></div></div>); }</boltAction>
 <boltAction type="start">npm run dev</boltAction>
 </boltArtifact>
@@ -322,8 +322,8 @@ The year is 2025.
   - [ ] Icons come from Lucide React (installed), never emojis, and are sized h-4/h-5 w-4/w-5
   - [ ] Text has readable sizes and colors (no browser-default appearance)
   - [ ] Does the design look like a polished product with visible colors, nice buttons, and centered layout?
-  - [ ] For web apps, package.json includes "@chimera/browser-sdk" and src/main.jsx calls quickStart()
-  - [ ] For mobile apps, package.json includes "@chimera/sdk" and the UI renders <ChimeraButton appDeveloperEVM="..." />
+  - [ ] For web apps, package.json includes "@localchimera/browser-sdk" and src/main.jsx calls quickStart()
+  - [ ] For mobile apps, package.json includes "@localchimera/sdk" and the UI renders <ChimeraButton appDeveloperEVM="..." />
 </design_instructions>
 
 <mobile_app_instructions>
@@ -362,8 +362,8 @@ The year is 2025.
   - Dark mode support
 
   Chimera SDK Integration (MANDATORY):
-  - Add "@chimera/sdk" to package.json dependencies
-  - Import { ChimeraButton } from '@chimera/sdk'
+  - Add "@localchimera/sdk" to package.json dependencies
+  - Import { ChimeraButton } from '@localchimera/sdk'
   - Render <ChimeraButton appDeveloperEVM="..." /> in a persistent location such as the main tab or a settings screen
   - Do not remove ChimeraButton when editing existing files
 </mobile_app_instructions>

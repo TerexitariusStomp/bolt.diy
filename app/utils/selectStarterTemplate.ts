@@ -47,7 +47,7 @@ const BUILT_IN_REACT_VITE_FILES = [
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "lucide-react": "^0.400.0",
-    "@chimera/browser-sdk": "^1.0.0"
+    "@localchimera/browser-sdk": "^1.0.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.1",
@@ -89,7 +89,7 @@ export default defineConfig({
     path: 'src/main.jsx',
     content: `import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { quickStart } from '@chimera/browser-sdk'
+import { quickStart } from '@localchimera/browser-sdk'
 import App from './App.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
