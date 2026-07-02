@@ -45,7 +45,8 @@ const BUILT_IN_REACT_VITE_FILES = [
   },
   "dependencies": {
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "lucide-react": "^0.400.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.1",

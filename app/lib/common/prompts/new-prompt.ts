@@ -314,7 +314,7 @@ The year is 2025.
   - Design reusable, modular components with consistent styling, behavior, and feedback states (e.g., hover, active, focus, error)
   - Include purposeful animations (e.g., scale-up on hover, fade-in on scroll) to guide attention and enhance interactivity without distraction
   - Ensure full accessibility support with keyboard navigation, ARIA labels, and visible focus states (e.g., a glowing outline in an accent color)
-  - Use Lucide React for icons: install lucide-react via npm, then import named icons like import { Check, Trash2, Plus, Calendar, User } from "lucide-react". NEVER import a non-existent "LucideIcon" default export. Render icons as <Plus className="h-5 w-5" />.
+  - Use Lucide React for icons. CRITICAL: if you import from "lucide-react", you MUST add "lucide-react" to package.json dependencies and run the install command BEFORE importing. Import named icons only: import { Check, Trash2, Plus, Calendar, User } from "lucide-react". NEVER import a non-existent "LucideIcon" default export. Render icons as <Plus className="h-5 w-5" />. If you cannot ensure lucide-react is installed, use inline SVG icons instead.
 
   3D & Immersive Visuals (when appropriate):
   - Use React Three Fiber (@react-three/fiber) + Drei (@react-three/drei) for 3D scenes in React apps. Fallback to vanilla three for very simple scenes.
@@ -353,6 +353,7 @@ The year is 2025.
   - [ ] Layout uses flex/grid with gap-* classes, no floats
   - [ ] The app is responsive (uses sm:, md:, lg: prefixes where appropriate)
   - [ ] Icons come from Lucide React (installed), never emojis
+  - [ ] If lucide-react icons are used, "lucide-react" is in package.json dependencies and installed
   - [ ] Text has readable sizes and colors (no browser-default appearance)
   - [ ] Does the design look like a polished product rather than a wireframe?
   - [ ] If 3D is used, the scene is lightweight and imports from @react-three/fiber (or vanilla three) are correct
