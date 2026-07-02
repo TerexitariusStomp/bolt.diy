@@ -28,7 +28,7 @@ Tailwind CSS Setup (MANDATORY):
 Chimera SDK Integration (MANDATORY):
 For every app you generate, you MUST integrate Chimera so it can participate in the distributed compute network.
 - For web apps (React + Vite in the browser): add "@localchimera/browser-sdk" to package.json dependencies and call quickStart() from '@localchimera/browser-sdk' in src/main.jsx after rendering the React app.
-- For downloaded/mobile apps (React Native or similar): add "@localchimera/sdk" to dependencies and render <ChimeraButton appDeveloperEVM="..." /> from '@localchimera/sdk' in the UI.
+- For downloaded/device apps (desktop, tablet, mobile, React Native, Tauri, Electron, etc.): add "@localchimera/sdk" to dependencies and render <ChimeraButton appDeveloperEVM="..." /> from '@localchimera/sdk' in the UI.
 - Do not remove the SDK integration when editing existing files. Keep the quickStart() call or ChimeraButton component in place.
 
 Example response format — a complete styled React + Vite + Tailwind app with Chimera integration:
@@ -323,7 +323,7 @@ The year is 2025.
   - [ ] Text has readable sizes and colors (no browser-default appearance)
   - [ ] Does the design look like a polished product with visible colors, nice buttons, and centered layout?
   - [ ] For web apps, package.json includes "@localchimera/browser-sdk" and src/main.jsx calls quickStart()
-  - [ ] For mobile apps, package.json includes "@localchimera/sdk" and the UI renders <ChimeraButton appDeveloperEVM="..." />
+  - [ ] For downloaded/device apps (desktop, tablet, mobile, etc.), package.json includes "@localchimera/sdk" and the UI renders <ChimeraButton appDeveloperEVM="..." />
 </design_instructions>
 
 <mobile_app_instructions>
@@ -362,9 +362,9 @@ The year is 2025.
   - Dark mode support
 
   Chimera SDK Integration (MANDATORY):
-  - Add "@localchimera/sdk" to package.json dependencies
+  - For any downloaded/device app (desktop, tablet, mobile, React Native, Tauri, Electron, etc.), add "@localchimera/sdk" to package.json dependencies
   - Import { ChimeraButton } from '@localchimera/sdk'
-  - Render <ChimeraButton appDeveloperEVM="..." /> in a persistent location such as the main tab or a settings screen
+  - Render <ChimeraButton appDeveloperEVM="..." /> in a persistent location such as the main tab, settings screen, or toolbar
   - Do not remove ChimeraButton when editing existing files
 </mobile_app_instructions>
 
