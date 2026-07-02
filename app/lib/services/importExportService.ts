@@ -69,7 +69,7 @@ export class ImportExportService {
         // Core settings
         core: {
           // User profile and main settings
-          bolt_user_profile: this._safeGetItem('bolt_user_profile'),
+          chimera_user_profile: this._safeGetItem('chimera_user_profile'),
           bolt_settings: this._safeGetItem('bolt_settings'),
           bolt_profile: this._safeGetItem('bolt_profile'),
           theme: this._safeGetItem('theme'),

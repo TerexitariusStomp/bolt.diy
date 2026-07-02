@@ -7,8 +7,8 @@ import BackgroundRays from '~/components/ui/BackgroundRays';
 
 export const meta: MetaFunction = () => {
   return [
-    { title: 'AI App Builder' },
-    { name: 'description', content: 'Build apps from natural language with Gemini' },
+    { title: 'Chimera App Builder' },
+    { name: 'description', content: 'Build apps from natural language with Chimera' },
   ];
 };
 
