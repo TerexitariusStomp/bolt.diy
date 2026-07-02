@@ -314,7 +314,7 @@ The year is 2025.
   - Design reusable, modular components with consistent styling, behavior, and feedback states (e.g., hover, active, focus, error)
   - Include purposeful animations (e.g., scale-up on hover, fade-in on scroll) to guide attention and enhance interactivity without distraction
   - Ensure full accessibility support with keyboard navigation, ARIA labels, and visible focus states (e.g., a glowing outline in an accent color)
-  - Use Lucide React for icons (install via npm) to reinforce the visual identity
+  - Use Lucide React for icons: install lucide-react via npm, then import named icons like import { Check, Trash2, Plus, Calendar, User } from "lucide-react". NEVER import a non-existent "LucideIcon" default export. Render icons as <Plus className="h-5 w-5" />.
 
   User Design Scheme:
   ${
